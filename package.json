@@ -1,0 +1,33 @@
+{
+  "name": "benditalook",
+  "version": "1.0.0",
+  "description": "Bendita Look",
+  "keywords": [
+    "ui5",
+    "openui5",
+    "sapui5"
+  ],
+  "main": "webapp/index.html",
+  "private": true,
+  "dependencies": {
+    "bendita-look-local-proxy": "file:./custom-proxy"
+  },
+  "devDependencies": {
+    "@sap-ux/eslint-plugin-fiori-tools": "^0.4.0",
+    "@sapui5/types": "~1.150.0",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
+    "@ui5/cli": "^4.0.62",
+    "eslint": "8.57.0",
+    "typescript": "^5.1.6",
+    "ui5-tooling-transpile": "^3.3.7"
+  },
+  "scripts": {
+    "start": "ui5 serve --config ./ui5-local.yaml --open index.html",
+    "build": "ui5 build --config=ui5.yaml --clean-dest --dest dist",
+    "lint": "eslint ./",
+    "ts-typecheck": "tsc --noEmit",
+    "prestart": "npm run ts-typecheck",
+    "prebuild": "npm run ts-typecheck"
+  }
+}

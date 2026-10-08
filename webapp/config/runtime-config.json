@@ -1,0 +1,13 @@
+{
+  "catalogService": "https://<org>-<space>-benditalook-srv.cfapps.us10-001.hana.ondemand.com/service/Catalog/",
+  "adminService": "https://<org>-<space>-benditalook-srv.cfapps.us10-001.hana.ondemand.com/service/BenditaLook/",
+  "storeWhatsapp": "5511999999999",
+  "auth": {
+    "authDomain": "https://<subdomain>.authentication.us10.hana.ondemand.com",
+    "clientId": "sb-BenditaLook-uaa-dev!t000000",
+    "scope": "openid BenditaLook-uaa-dev!t000000.Admin",
+    "redirectUri": "https://davicastr.github.io/SAP-UI5-BenditaLook/",
+    "tokenEndpoint": "https://<org>-<space>-benditalook-srv.cfapps.us10-001.hana.ondemand.com/auth/login",
+    "refreshEndpoint": "https://<org>-<space>-benditalook-srv.cfapps.us10-001.hana.ondemand.com/auth/refresh"
+  }
+}

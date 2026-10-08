@@ -1,0 +1,129 @@
+<mvc:View
+    controllerName="apps.dflc.benditalook.controller.Cart"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+>
+    <Page id="cartPage" class="blPage">
+        <customHeader>
+            <core:Fragment fragmentName="apps.dflc.benditalook.view.fragments.StoreHeader" type="XML" />
+        </customHeader>
+        <content>
+            <IllustratedMessage
+                illustrationType="sapIllus-EmptyList"
+                title="{i18n>emptyCartTitle}"
+                description="{i18n>emptyCartDescription}"
+                visible="{= ${cart>/count} === 0 }"
+            >
+                <additionalContent>
+                    <Button text="{i18n>continueShopping}" type="Emphasized" press=".onContinueShopping" />
+                </additionalContent>
+            </IllustratedMessage>
+
+            <VBox visible="{= ${cart>/count} > 0 }" class="blContainer">
+                <Title text="{i18n>cartTitle}" level="H1" titleStyle="H3" class="sapUiSmallMarginBottom" />
+
+                <List items="{cart>/items}" class="blCartList">
+                    <CustomListItem>
+                        <HBox alignItems="Center" class="blCartItem">
+                            <Image
+                                src="{path: 'cart>ImageId', formatter: '.formatter.catalogImageUrl'}"
+                                width="4.5rem"
+                                height="6rem"
+                                densityAware="false"
+                                class="blCartImage sapUiSmallMarginEnd"
+                            />
+                            <VBox class="blCartItemInfo">
+                                <Text text="{cart>ProductName}" class="blProductName" />
+                                <Text text="{parts: ['cart>ColorName', 'cart>Size'], formatter: '.formatter.variantDescription'}" class="blMuted" />
+                                <Text text="{path: 'cart>UnitPrice', targetType: 'any', formatter: '.formatter.currency'}" class="blProductPrice" />
+                            </VBox>
+                            <StepInput
+                                value="{cart>Quantity}"
+                                min="1"
+                                max="{cart>MaxQuantity}"
+                                width="7rem"
+                                change=".onQuantityChange"
+                            />
+                            <Button
+                                icon="sap-icon://delete"
+                                type="Transparent"
+                                tooltip="{i18n>remove}"
+                                press=".onRemoveItem"
+                            />
+                        </HBox>
+                    </CustomListItem>
+                </List>
+
+                <HBox justifyContent="End" alignItems="Center" class="blCartTotal">
+                    <Text text="{i18n>total}" class="sapUiSmallMarginEnd" />
+                    <Text text="{path: 'cart>/total', targetType: 'any', formatter: '.formatter.currency'}" class="blDetailPrice" />
+                </HBox>
+
+                <MessageStrip
+                    text="{i18n>checkoutInfo}"
+                    type="Information"
+                    showIcon="true"
+                    class="sapUiSmallMarginTopBottom"
+                />
+
+                <form:SimpleForm
+                    editable="true"
+                    layout="ColumnLayout"
+                    columnsM="2"
+                    columnsL="2"
+                    columnsXL="2"
+                    title="{i18n>contactTitle}"
+                    class="blForm"
+                >
+                    <Label text="{i18n>customerName}" required="true" />
+                    <Input
+                        value="{contact>/data/CustomerName}"
+                        valueState="{contact>/states/CustomerName}"
+                        valueStateText="{i18n>customerNameInvalid}"
+                        maxLength="120"
+                    />
+                    <Label text="{i18n>customerPhone}" required="true" />
+                    <Input
+                        value="{contact>/data/CustomerPhone}"
+                        valueState="{contact>/states/CustomerPhone}"
+                        valueStateText="{i18n>customerPhoneInvalid}"
+                        placeholder="{i18n>customerPhonePlaceholder}"
+                        type="Tel"
+                        maxLength="20"
+                    />
+                    <Label text="{i18n>customerEmail}" required="true" />
+                    <Input
+                        value="{contact>/data/CustomerEmail}"
+                        valueState="{contact>/states/CustomerEmail}"
+                        valueStateText="{i18n>customerEmailInvalid}"
+                        type="Email"
+                        maxLength="120"
+                    />
+                    <Label text="{i18n>zipCode}" />
+                    <Input value="{contact>/data/ZipCode}" maxLength="10" />
+                    <Label text="{i18n>address}" />
+                    <Input value="{contact>/data/Address}" maxLength="200" />
+                    <Label text="{i18n>district}" />
+                    <Input value="{contact>/data/District}" maxLength="80" />
+                    <Label text="{i18n>city}" />
+                    <Input value="{contact>/data/City}" maxLength="80" />
+                    <Label text="{i18n>notes}" />
+                    <TextArea value="{contact>/data/Notes}" maxLength="500" rows="3" growing="true" />
+                </form:SimpleForm>
+
+                <HBox justifyContent="End" class="sapUiMediumMarginTop">
+                    <Button text="{i18n>continueShopping}" press=".onContinueShopping" class="sapUiSmallMarginEnd" />
+                    <Button
+                        text="{i18n>submitOrder}"
+                        icon="sap-icon://paper-plane"
+                        type="Emphasized"
+                        press=".onSubmitOrder"
+                        class="blPrimaryButton"
+                    />
+                </HBox>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

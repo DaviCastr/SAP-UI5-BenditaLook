@@ -1,0 +1,91 @@
+<mvc:View
+    controllerName="apps.dflc.benditalook.controller.OrderTracking"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Page id="orderTrackingPage" class="blPage">
+        <customHeader>
+            <core:Fragment fragmentName="apps.dflc.benditalook.view.fragments.StoreHeader" type="XML" />
+        </customHeader>
+        <content>
+            <VBox visible="{tracking>/loaded}" class="blContainer blTracking">
+                <Title
+                    text="{parts: ['i18n>orderNumber', 'tracking>/order/Number'], formatter: '.formatter.message'}"
+                    level="H1"
+                    titleStyle="H2"
+                />
+                <Text text="{path: 'tracking>/order/createdAt', targetType: 'any', formatter: '.formatter.dateTime'}" class="blMuted" />
+
+                <MessageStrip
+                    text="{i18n>orderCancelledInfo}"
+                    type="Error"
+                    showIcon="true"
+                    visible="{tracking>/cancelled}"
+                    class="sapUiSmallMarginTop"
+                />
+
+                <HBox
+                    items="{tracking>/steps}"
+                    visible="{= !${tracking>/cancelled} }"
+                    justifyContent="SpaceBetween"
+                    class="blSteps sapUiMediumMarginTopBottom"
+                >
+                    <VBox alignItems="Center" class="blStep">
+                        <core:Icon
+                            src="{tracking>icon}"
+                            size="1.75rem"
+                            color="{= ${tracking>done} ? '#8e3b5b' : '#c9a3b2' }"
+                        />
+                        <Text text="{tracking>text}" textAlign="Center" class="sapUiTinyMarginTop" />
+                    </VBox>
+                </HBox>
+
+                <Text text="{i18n>trackingInfo}" class="sapUiSmallMarginBottom" />
+
+                <Table items="{tracking>/order/Items}" class="blTable">
+                    <columns>
+                        <Column>
+                            <Text text="{i18n>product}" />
+                        </Column>
+                        <Column hAlign="Center" width="7rem">
+                            <Text text="{i18n>quantity}" />
+                        </Column>
+                        <Column hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="{i18n>unitPrice}" />
+                        </Column>
+                        <Column hAlign="End">
+                            <Text text="{i18n>total}" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{parts: ['tracking>ProductName', 'tracking>ColorName', 'tracking>Size'], formatter: '.formatter.variantDescription'}" />
+                                <Text text="{tracking>Quantity}" />
+                                <Text text="{path: 'tracking>UnitPrice', targetType: 'any', formatter: '.formatter.currency'}" />
+                                <Text text="{path: 'tracking>TotalPrice', targetType: 'any', formatter: '.formatter.currency'}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+                <HBox justifyContent="End" alignItems="Center" class="blCartTotal">
+                    <Text text="{i18n>total}" class="sapUiSmallMarginEnd" />
+                    <Text text="{path: 'tracking>/order/TotalAmount', targetType: 'any', formatter: '.formatter.currency'}" class="blDetailPrice" />
+                </HBox>
+
+                <HBox justifyContent="End" class="sapUiMediumMarginTop">
+                    <Button text="{i18n>continueShopping}" press=".onContinueShopping" class="sapUiSmallMarginEnd" />
+                    <Button
+                        text="{i18n>talkOnWhatsapp}"
+                        icon="sap-icon://discussion"
+                        type="Success"
+                        press=".onContactWhatsapp"
+                        visible="{= !!${store>/whatsapp} }"
+                    />
+                </HBox>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

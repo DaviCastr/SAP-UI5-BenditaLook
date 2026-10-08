@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "3.1"
+metadata:
+  name: apps.dflc.benditalook
+type: application
+server:
+  customMiddleware:
+    - name: bendita-look-local-proxy
+      afterMiddleware: compression
+      configuration:
+        backend: http://localhost:4004
+        basicAuth: davi:123456
+        basicAuthPath: /service/BenditaLook
+    - name: ui5-tooling-transpile-middleware
+      afterMiddleware: compression
+      configuration:
+        debug: true
+        transformModulesToUI5:
+          overridesToOverride: true
+        excludePatterns:
+          - /Component-preload.js

@@ -1,0 +1,7 @@
+{
+  "name": "bendita-look-local-proxy",
+  "version": "1.0.0",
+  "description": "Local reverse proxy for the Bendita Look CAP backend (OData + auth)",
+  "main": "index.js",
+  "private": true
+}

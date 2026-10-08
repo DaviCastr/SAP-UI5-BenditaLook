@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#8e3b5b">
+    <meta name="description" content="Bendita Look - moda feminina">
+    <title>Bendita Look</title>
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+    <style>
+        html, body, body > div, #container, #container-uiarea {
+            height: 100%;
+        }
+        @supports (height: 100dvh) {
+            html, body, body > div, #container, #container-uiarea {
+                height: 100dvh;
+            }
+        }
+        @supports (-webkit-touch-callout: none) {
+            input, textarea, select {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+    <script
+        id="sap-ui-bootstrap"
+        src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-language="pt-BR"
+        data-sap-ui-resource-roots='{
+            "apps.dflc.benditalook": "./"
+        }'
+        data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
+        data-sap-ui-compat-version="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-frame-options="trusted"
+    ></script>
+</head>
+<body class="sapUiBody" id="content">
+    <div
+        data-sap-ui-component
+        data-name="apps.dflc.benditalook"
+        data-id="container"
+        data-settings='{"id" : "apps.dflc.benditalook"}'
+        data-handle-validation="true"
+    ></div>
+</body>
+</html>

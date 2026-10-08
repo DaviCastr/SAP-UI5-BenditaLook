@@ -1,0 +1,7 @@
+specVersion: "1.0"
+metadata:
+    name: bendita-look-local-proxy
+kind: extension
+type: server-middleware
+middleware:
+    path: index.js

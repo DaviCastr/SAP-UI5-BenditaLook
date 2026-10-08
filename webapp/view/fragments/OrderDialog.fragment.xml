@@ -1,0 +1,90 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+>
+    <Dialog
+        id="orderDialog"
+        title="{= '#' + ${path: 'Number', targetType: 'any'} + ' · ' + ${path: 'CustomerName', targetType: 'any'} }"
+        contentWidth="40rem"
+        resizable="true"
+        draggable="true"
+        class="blDialog"
+    >
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                    <ObjectStatus
+                        text="{path: 'Status', formatter: '.formatStatus'}"
+                        state="{path: 'Status', formatter: '.formatter.statusState'}"
+                        inverted="true"
+                    />
+                    <Text text="{path: 'createdAt', targetType: 'any', formatter: '.formatter.dateTime'}" class="blMuted" />
+                </HBox>
+
+                <form:SimpleForm editable="false" layout="ColumnLayout" title="{i18n>contactTitle}">
+                    <Label text="{i18n>customerName}" />
+                    <Text text="{CustomerName}" />
+                    <Label text="{i18n>customerPhone}" />
+                    <Text text="{CustomerPhone}" />
+                    <Label text="{i18n>customerEmail}" />
+                    <Link text="{CustomerEmail}" href="{= 'mailto:' + ${path: 'CustomerEmail', targetType: 'any'} }" />
+                    <Label text="{i18n>address}" />
+                    <Text text="{parts: ['Address', 'District', 'City', 'ZipCode'], formatter: '.formatter.variantDescription'}" />
+                    <Label text="{i18n>notes}" />
+                    <Text text="{Notes}" />
+                </form:SimpleForm>
+
+                <Table items="{path: 'Items', templateShareable: false}" class="blTable sapUiSmallMarginTop">
+                    <columns>
+                        <Column>
+                            <Text text="{i18n>product}" />
+                        </Column>
+                        <Column hAlign="Center" width="7rem">
+                            <Text text="{i18n>quantity}" />
+                        </Column>
+                        <Column hAlign="End">
+                            <Text text="{i18n>total}" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{parts: ['ProductName', 'ColorName', 'Size'], formatter: '.formatter.variantDescription'}" />
+                                <Text text="{Quantity}" />
+                                <Text text="{path: 'TotalPrice', targetType: 'any', formatter: '.formatter.currency'}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+                <HBox justifyContent="End" alignItems="Center" class="blCartTotal">
+                    <Text text="{i18n>total}" class="sapUiSmallMarginEnd" />
+                    <Text text="{path: 'TotalAmount', targetType: 'any', formatter: '.formatter.currency'}" class="blDetailPrice" />
+                </HBox>
+            </VBox>
+        </content>
+        <buttons>
+            <Button text="{i18n>whatsapp}" icon="sap-icon://discussion" type="Success" press=".orders.onWhatsapp" />
+            <Button
+                text="{i18n>startService}"
+                type="Emphasized"
+                visible="{= ${path: 'Status', targetType: 'any'} === 'NEW' }"
+                press=".orders.onStartService"
+            />
+            <Button
+                text="{i18n>completeOrder}"
+                type="Emphasized"
+                visible="{= ${path: 'Status', targetType: 'any'} === 'IN_SERVICE' }"
+                press=".orders.onComplete"
+            />
+            <Button
+                text="{i18n>cancelOrder}"
+                type="Reject"
+                visible="{= ${path: 'Status', targetType: 'any'} === 'NEW' || ${path: 'Status', targetType: 'any'} === 'IN_SERVICE' }"
+                press=".orders.onCancel"
+            />
+            <Button text="{i18n>close}" press=".orders.onCloseDialog" />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>
