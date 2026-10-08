@@ -1,0 +1,231 @@
+<mvc:View
+    controllerName="apps.dflc.benditalook.controller.Admin"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:unified="sap.ui.unified"
+>
+    <Page id="adminPage" class="blPage">
+        <customHeader>
+            <Bar class="blHeader">
+                <contentLeft>
+                    <HBox alignItems="Center" class="blBrand">
+                        <Image src="img/logo.svg" width="2rem" height="2rem" decorative="true" class="sapUiTinyMarginEnd" />
+                        <Title text="{i18n>adminTitle}" class="blBrandTitle" />
+                    </HBox>
+                </contentLeft>
+                <contentRight>
+                    <Text text="{adminView>/userName}" class="blMuted sapUiSmallMarginEnd" />
+                    <Button icon="sap-icon://retail-store" tooltip="{i18n>openStore}" type="Transparent" press=".onOpenStore" />
+                    <Button icon="sap-icon://log" tooltip="{i18n>logout}" type="Transparent" press=".onLogout" />
+                </contentRight>
+            </Bar>
+        </customHeader>
+        <content>
+            <IconTabBar
+                id="adminTabs"
+                selectedKey="{adminView>/tab}"
+                select=".onTabSelect"
+                expandable="false"
+                stretchContentHeight="false"
+                class="blTabs"
+            >
+                <items>
+                    <IconTabFilter key="orders" icon="sap-icon://sales-order" text="{i18n>ordersTab}">
+                        <Toolbar style="Clear">
+                            <SegmentedButton selectionChange=".orders.onStatusFilter" selectedKey="ALL">
+                                <items>
+                                    <SegmentedButtonItem key="ALL" text="{i18n>allOrders}" />
+                                    <SegmentedButtonItem key="NEW" text="{i18n>orderStatus.NEW}" />
+                                    <SegmentedButtonItem key="IN_SERVICE" text="{i18n>orderStatus.IN_SERVICE}" />
+                                    <SegmentedButtonItem key="COMPLETED" text="{i18n>orderStatus.COMPLETED}" />
+                                    <SegmentedButtonItem key="CANCELLED" text="{i18n>orderStatus.CANCELLED}" />
+                                </items>
+                            </SegmentedButton>
+                            <ToolbarSpacer />
+                            <Button icon="sap-icon://refresh" tooltip="{i18n>refresh}" press=".orders.onRefresh" />
+                        </Toolbar>
+                        <Table
+                            id="ordersTable"
+                            growing="true"
+                            growingThreshold="30"
+                            noDataText="{i18n>noOrders}"
+                            class="blTable"
+                            items="{path: '/Orders', parameters: {$orderby: 'Number desc'}}"
+                        >
+                            <columns>
+                                <Column width="6rem">
+                                    <Text text="{i18n>orderColumnNumber}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>customer}" />
+                                </Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true">
+                                    <Text text="{i18n>date}" />
+                                </Column>
+                                <Column hAlign="End">
+                                    <Text text="{i18n>total}" />
+                                </Column>
+                                <Column hAlign="Center">
+                                    <Text text="{i18n>status}" />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Navigation" press=".orders.onOrderPress">
+                                    <cells>
+                                        <ObjectIdentifier title="{= '#' + ${path: 'Number', targetType: 'any'} }" />
+                                        <ObjectIdentifier title="{CustomerName}" text="{CustomerPhone}" />
+                                        <Text text="{path: 'createdAt', targetType: 'any', formatter: '.formatter.dateTime'}" />
+                                        <Text text="{path: 'TotalAmount', targetType: 'any', formatter: '.formatter.currency'}" />
+                                        <ObjectStatus
+                                            text="{path: 'Status', formatter: '.formatStatus'}"
+                                            state="{path: 'Status', formatter: '.formatter.statusState'}"
+                                            inverted="true"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+
+                    <IconTabFilter key="products" icon="sap-icon://product" text="{i18n>productsTab}">
+                        <Toolbar style="Clear">
+                            <ToolbarSpacer />
+                            <Button text="{i18n>newProduct}" icon="sap-icon://add" type="Emphasized" press=".products.onNewProduct" />
+                        </Toolbar>
+                        <Table
+                            id="productsTable"
+                            growing="true"
+                            growingThreshold="30"
+                            noDataText="{i18n>noProducts}"
+                            class="blTable"
+                            items="{
+                                path: '/Products',
+                                parameters: {
+                                    $filter: 'IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null',
+                                    $expand: 'Category($select=Name),Variants($select=ID,Stock),Images($select=ID,SortOrder)',
+                                    $orderby: 'Name'
+                                }
+                            }"
+                        >
+                            <columns>
+                                <Column width="4.5rem">
+                                    <Text text="{i18n>photo}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>productName}" />
+                                </Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true">
+                                    <Text text="{i18n>category}" />
+                                </Column>
+                                <Column hAlign="End">
+                                    <Text text="{i18n>price}" />
+                                </Column>
+                                <Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+                                    <Text text="{i18n>stock}" />
+                                </Column>
+                                <Column hAlign="Center">
+                                    <Text text="{i18n>status}" />
+                                </Column>
+                                <Column width="3.5rem" />
+                            </columns>
+                            <items>
+                                <ColumnListItem type="Navigation" press=".products.onProductPress">
+                                    <cells>
+                                        <Image
+                                            src="{path: 'Images', targetType: 'any', formatter: '.formatter.coverImageUrl'}"
+                                            width="2.75rem"
+                                            height="3.5rem"
+                                            densityAware="false"
+                                            class="blThumb"
+                                        />
+                                        <ObjectIdentifier title="{Name}" text="{= ${path: 'IsActiveEntity', targetType: 'any'} ? '' : ${i18n>draft} }" />
+                                        <Text text="{Category/Name}" />
+                                        <Text text="{path: 'Price', targetType: 'any', formatter: '.formatter.currency'}" />
+                                        <Text text="{path: 'Variants', targetType: 'any', formatter: '.formatter.totalStock'}" />
+                                        <ObjectStatus
+                                            text="{= ${path: 'Active', targetType: 'any'} ? ${i18n>active} : ${i18n>inactive} }"
+                                            state="{= ${path: 'Active', targetType: 'any'} ? 'Success' : 'None' }"
+                                        />
+                                        <Button icon="sap-icon://delete" type="Transparent" tooltip="{i18n>delete}" press=".products.onDeleteProduct" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+
+                    <IconTabFilter key="categories" icon="sap-icon://tags" text="{i18n>categoriesTab}">
+                        <Toolbar style="Clear">
+                            <ToolbarSpacer />
+                            <Button text="{i18n>newCategory}" icon="sap-icon://add" type="Emphasized" press=".categories.onNewCategory" />
+                        </Toolbar>
+                        <Table
+                            id="categoriesTable"
+                            noDataText="{i18n>noCategories}"
+                            class="blTable"
+                            items="{
+                                path: '/Categories',
+                                parameters: {
+                                    $filter: 'IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null',
+                                    $orderby: 'Name'
+                                }
+                            }"
+                        >
+                            <columns>
+                                <Column>
+                                    <Text text="{i18n>categoryName}" />
+                                </Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true">
+                                    <Text text="{i18n>description}" />
+                                </Column>
+                                <Column hAlign="Center">
+                                    <Text text="{i18n>status}" />
+                                </Column>
+                                <Column width="6rem" />
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <ObjectIdentifier title="{Name}" text="{= ${path: 'IsActiveEntity', targetType: 'any'} ? '' : ${i18n>draft} }" />
+                                        <Text text="{Description}" />
+                                        <ObjectStatus
+                                            text="{= ${path: 'Active', targetType: 'any'} ? ${i18n>active} : ${i18n>inactive} }"
+                                            state="{= ${path: 'Active', targetType: 'any'} ? 'Success' : 'None' }"
+                                        />
+                                        <HBox justifyContent="End">
+                                            <Button icon="sap-icon://edit" type="Transparent" tooltip="{i18n>edit}" press=".categories.onEditCategory" />
+                                            <Button icon="sap-icon://delete" type="Transparent" tooltip="{i18n>delete}" press=".categories.onDeleteCategory" />
+                                        </HBox>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+
+                    <IconTabFilter key="backup" icon="sap-icon://database" text="{i18n>backupTab}">
+                        <VBox class="blContainer">
+                            <MessageStrip text="{i18n>backupInfo}" type="Information" showIcon="true" class="sapUiSmallMarginBottom" />
+                            <HBox wrap="Wrap">
+                                <Button
+                                    text="{i18n>exportBackup}"
+                                    icon="sap-icon://download"
+                                    type="Emphasized"
+                                    press=".backup.onExport"
+                                    class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                                />
+                                <unified:FileUploader
+                                    buttonOnly="true"
+                                    buttonText="{i18n>importBackup}"
+                                    icon="sap-icon://upload"
+                                    fileType="zip"
+                                    sendXHR="true"
+                                    change=".backup.onImportFileChange"
+                                />
+                            </HBox>
+                        </VBox>
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+        </content>
+    </Page>
+</mvc:View>

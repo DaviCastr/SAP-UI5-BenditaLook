@@ -1,0 +1,197 @@
+<mvc:View
+    controllerName="apps.dflc.benditalook.controller.ProductEditor"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:unified="sap.ui.unified"
+>
+    <Page
+        id="productEditorPage"
+        title="{= ${path: 'HasActiveEntity', targetType: 'any'} ? ${i18n>editProduct} : ${i18n>newProduct} }"
+        showNavButton="true"
+        navButtonPress=".onBackToList"
+        class="blPage"
+    >
+        <content>
+            <VBox class="blContainer">
+                <MessageStrip text="{i18n>draftInfo}" type="Information" showIcon="true" class="sapUiSmallMarginBottom" />
+
+                <form:SimpleForm
+                    editable="true"
+                    layout="ColumnLayout"
+                    columnsM="2"
+                    columnsL="2"
+                    columnsXL="2"
+                    title="{i18n>generalData}"
+                    class="blForm"
+                >
+                    <Label text="{i18n>productName}" required="true" />
+                    <Input value="{Name}" maxLength="120" />
+                    <Label text="{i18n>category}" required="true" />
+                    <Select
+                        selectedKey="{Category_ID}"
+                        forceSelection="false"
+                        width="100%"
+                        items="{path: '/Categories', parameters: {$select: 'ID,Name'}, sorter: {path: 'Name'}, templateShareable: false}"
+                    >
+                        <core:Item key="{ID}" text="{Name}" />
+                    </Select>
+                    <Label text="{i18n>price}" required="true" />
+                    <Input value="{Price}" description="R$" />
+                    <Label text="{i18n>activeInStore}" />
+                    <Switch state="{Active}" customTextOn="{i18n>yes}" customTextOff="{i18n>no}" />
+                    <Label text="{i18n>featured}" />
+                    <Switch state="{Featured}" customTextOn="{i18n>yes}" customTextOff="{i18n>no}" />
+                    <Label text="{i18n>description}" />
+                    <TextArea value="{Description}" maxLength="1000" rows="4" growing="true" />
+                </form:SimpleForm>
+
+                <Table
+                    id="colorsTable"
+                    updateFinished=".onColorsUpdated"
+                    class="blTable sapUiMediumMarginTop"
+                    noDataText="{i18n>noColors}"
+                    items="{path: 'Colors', parameters: {$$ownRequest: true}, templateShareable: false}"
+                >
+                    <headerToolbar>
+                        <Toolbar>
+                            <Title text="{i18n>colors}" level="H3" />
+                            <ToolbarSpacer />
+                            <Button text="{i18n>addColor}" icon="sap-icon://add" press=".onAddColor" />
+                        </Toolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column>
+                            <Text text="{i18n>colorName}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>colorCode}" />
+                        </Column>
+                        <Column width="3.5rem" />
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Input value="{Name}" maxLength="40" change=".onColorNameChange" />
+                                <HBox alignItems="Center">
+                                    <Input value="{HexCode}" maxLength="7" placeholder="#RRGGBB" width="8rem" />
+                                    <Button icon="sap-icon://palette" type="Transparent" tooltip="{i18n>pickColor}" press=".onOpenColorPicker" />
+                                </HBox>
+                                <Button icon="sap-icon://delete" type="Transparent" tooltip="{i18n>delete}" press=".onDeleteRow" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+                <Table
+                    id="variantsTable"
+                    class="blTable sapUiMediumMarginTop"
+                    noDataText="{i18n>noVariants}"
+                    items="{path: 'Variants', parameters: {$$ownRequest: true}, templateShareable: false}"
+                >
+                    <headerToolbar>
+                        <Toolbar>
+                            <Title text="{i18n>sizesAndStock}" level="H3" />
+                            <ToolbarSpacer />
+                            <Button text="{i18n>addVariant}" icon="sap-icon://add" press=".onAddVariant" />
+                        </Toolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column>
+                            <Text text="{i18n>color}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>size}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>stock}" />
+                        </Column>
+                        <Column width="3.5rem" />
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Select
+                                    selectedKey="{Color_ID}"
+                                    forceSelection="false"
+                                    width="100%"
+                                    items="{path: 'editor>/colorOptions', templateShareable: false}"
+                                >
+                                    <core:Item key="{editor>key}" text="{editor>text}" />
+                                </Select>
+                                <Input value="{Size}" maxLength="10" placeholder="{i18n>sizePlaceholder}" />
+                                <StepInput value="{Stock}" min="0" max="99999" width="9rem" />
+                                <Button icon="sap-icon://delete" type="Transparent" tooltip="{i18n>delete}" press=".onDeleteRow" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+                <Table
+                    id="imagesTable"
+                    updateFinished=".onImagesUpdated"
+                    class="blTable sapUiMediumMarginTop"
+                    noDataText="{i18n>noImages}"
+                    items="{path: 'Images', parameters: {$$ownRequest: true, $orderby: 'SortOrder'}, templateShareable: false}"
+                >
+                    <headerToolbar>
+                        <Toolbar>
+                            <Title text="{i18n>photos}" level="H3" />
+                            <ToolbarSpacer />
+                            <unified:FileUploader
+                                buttonOnly="true"
+                                buttonText="{i18n>addPhoto}"
+                                icon="sap-icon://add-photo"
+                                mimeType="image/jpeg,image/png,image/webp"
+                                change=".onImageSelected"
+                            />
+                        </Toolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column width="6rem">
+                            <Text text="{i18n>photo}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>color}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>displayOrder}" />
+                        </Column>
+                        <Column width="3.5rem" />
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Image
+                                    src="{parts: ['ID', 'editor>/imageUrls'], formatter: '.draftImageUrl'}"
+                                    width="4.5rem"
+                                    height="6rem"
+                                    densityAware="false"
+                                    class="blThumb"
+                                />
+                                <Select
+                                    selectedKey="{Color_ID}"
+                                    forceSelection="false"
+                                    width="100%"
+                                    items="{path: 'editor>/colorOptions', templateShareable: false}"
+                                >
+                                    <core:Item key="{editor>key}" text="{editor>text}" />
+                                </Select>
+                                <StepInput value="{SortOrder}" min="0" max="99" width="8rem" />
+                                <Button icon="sap-icon://delete" type="Transparent" tooltip="{i18n>delete}" press=".onDeleteRow" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+        <footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+                <Button text="{i18n>discardDraft}" type="Reject" press=".onDiscard" />
+                <Button text="{i18n>saveProduct}" type="Emphasized" icon="sap-icon://save" press=".onSave" />
+            </OverflowToolbar>
+        </footer>
+    </Page>
+</mvc:View>

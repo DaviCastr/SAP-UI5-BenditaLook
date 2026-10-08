@@ -1,0 +1,2 @@
+sap.ui.define(["../AuthenticationService"],function(e){"use strict";const t=e["AuthenticationService"];class i{static SESSION_DURATION_MS=36e5;login(){return Promise.resolve({accessToken:"",expiresAt:Date.now()+i.SESSION_DURATION_MS,userName:"Admin"})}logout(){return Promise.resolve()}isAuthenticated(){const e=t.getSession();return Promise.resolve(!!e&&e.expiresAt>Date.now())}}var r={__esModule:true};r.MockAuthenticationProvider=i;return r});
+//# sourceMappingURL=MockAuthenticationProvider.js.map

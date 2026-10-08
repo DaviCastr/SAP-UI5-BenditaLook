@@ -1,0 +1,128 @@
+<mvc:View
+    controllerName="apps.dflc.benditalook.controller.Catalog"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:core="sap.ui.core"
+>
+    <Page id="catalogPage" class="blPage">
+        <customHeader>
+            <Bar class="blHeader">
+                <contentLeft>
+                    <HBox alignItems="Center" class="blBrand">
+                        <Image
+                            src="img/logo.svg"
+                            width="2rem"
+                            height="2rem"
+                            alt="{i18n>appTitle}"
+                            class="sapUiTinyMarginEnd"
+                        />
+                        <Title text="{i18n>appTitle}" class="blBrandTitle" />
+                    </HBox>
+                </contentLeft>
+                <contentRight>
+                    <Button
+                        icon="sap-icon://cart"
+                        type="Transparent"
+                        tooltip="{i18n>cart}"
+                        press=".onOpenCart"
+                        class="blCartButton"
+                    >
+                        <customData>
+                            <BadgeCustomData
+                                key="badge"
+                                value="{cart>/count}"
+                                visible="{= ${cart>/count} > 0 }"
+                            />
+                        </customData>
+                    </Button>
+                </contentRight>
+            </Bar>
+        </customHeader>
+        <content>
+            <VBox class="blHero" alignItems="Center">
+                <Title text="{i18n>heroTitle}" level="H1" titleStyle="H1" wrapping="true" textAlign="Center" class="blHeroTitle" />
+                <Text text="{i18n>heroSubtitle}" textAlign="Center" class="blHeroSubtitle" />
+            </VBox>
+
+            <VBox class="blContainer">
+                <SearchField
+                    id="searchField"
+                    placeholder="{i18n>searchPlaceholder}"
+                    search=".onSearch"
+                    class="sapUiSmallMarginBottom"
+                />
+
+                <ScrollContainer horizontal="true" vertical="false" width="100%" class="blChips">
+                    <HBox>
+                        <Button
+                            text="{i18n>allCategories}"
+                            type="{= ${catalogView>/categoryId} === '' ? 'Emphasized' : 'Default' }"
+                            press=".onCategoryPress"
+                            class="blChip"
+                        />
+                        <HBox items="{path: 'catalog>/Categories', sorter: {path: 'Name'}, templateShareable: false}">
+                            <Button
+                                text="{catalog>Name}"
+                                type="{= ${catalogView>/categoryId} === ${catalog>ID} ? 'Emphasized' : 'Default' }"
+                                press=".onCategoryPress"
+                                class="blChip"
+                            />
+                        </HBox>
+                    </HBox>
+                </ScrollContainer>
+
+                <f:GridList
+                    id="productGrid"
+                    growing="true"
+                    growingThreshold="24"
+                    noDataText="{i18n>noProducts}"
+                    class="blProductGrid"
+                    items="{
+                        path: 'catalog>/Products',
+                        parameters: {
+                            $expand: 'Images($select=ID,SortOrder),Variants($select=ID,Stock)',
+                            $orderby: 'Featured desc,Name'
+                        }
+                    }"
+                >
+                    <f:customLayout>
+                        <grid:GridBoxLayout boxMinWidth="14rem" />
+                    </f:customLayout>
+                    <f:GridListItem type="Active" press=".onProductPress" class="blProductCard">
+                        <VBox>
+                            <VBox class="blProductImageWrapper">
+                                <Image
+                                    src="{path: 'catalog>Images', targetType: 'any', formatter: '.formatter.coverImageUrl'}"
+                                    alt="{catalog>Name}"
+                                    width="100%"
+                                    densityAware="false"
+                                    class="blProductImage"
+                                />
+                            </VBox>
+                            <VBox class="blProductInfo">
+                                <HBox justifyContent="SpaceBetween" alignItems="Center">
+                                    <Text
+                                        text="{i18n>featured}"
+                                        visible="{= ${catalog>Featured} === true }"
+                                        class="blFeaturedTag"
+                                    />
+                                    <ObjectStatus
+                                        text="{i18n>soldOut}"
+                                        state="Error"
+                                        visible="{path: 'catalog>Variants', targetType: 'any', formatter: '.formatter.isSoldOut'}"
+                                    />
+                                </HBox>
+                                <Text text="{catalog>Name}" maxLines="2" class="blProductName" />
+                                <Text text="{path: 'catalog>Price', targetType: 'any', formatter: '.formatter.currency'}" class="blProductPrice" />
+                            </VBox>
+                        </VBox>
+                    </f:GridListItem>
+                </f:GridList>
+            </VBox>
+
+            <core:Fragment fragmentName="apps.dflc.benditalook.view.fragments.StoreFooter" type="XML" />
+        </content>
+    </Page>
+</mvc:View>

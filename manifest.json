@@ -1,0 +1,158 @@
+{
+	"_version": "1.76.0",
+	"sap.app": {
+		"id": "apps.dflc.benditalook",
+		"type": "application",
+		"i18n": {
+			"bundleUrl": "i18n/i18n.properties",
+			"supportedLocales": [
+				""
+			],
+			"fallbackLocale": ""
+		},
+		"applicationVersion": {
+			"version": "1.0.0"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}"
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"favIcon": "img/favicon.svg"
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+	"sap.ui5": {
+		"dependencies": {
+			"minUI5Version": "1.136.0",
+			"libs": {
+				"sap.m": {},
+				"sap.f": {},
+				"sap.ui.core": {},
+				"sap.ui.layout": {},
+				"sap.ui.unified": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "apps.dflc.benditalook.i18n.i18n",
+					"supportedLocales": [
+						""
+					],
+					"fallbackLocale": ""
+				}
+			}
+		},
+		"resources": {
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
+		},
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"controlAggregation": "pages",
+				"controlId": "app",
+				"transition": "slide",
+				"type": "View",
+				"viewType": "XML",
+				"path": "apps.dflc.benditalook.view",
+				"async": true
+			},
+			"routes": [
+				{
+					"name": "catalog",
+					"pattern": "",
+					"target": "catalog"
+				},
+				{
+					"name": "product",
+					"pattern": "product/{productId}",
+					"target": "product"
+				},
+				{
+					"name": "cart",
+					"pattern": "cart",
+					"target": "cart"
+				},
+				{
+					"name": "order",
+					"pattern": "order/{orderNumber}/{accessCode}",
+					"target": "order"
+				},
+				{
+					"name": "login",
+					"pattern": "login",
+					"target": "login"
+				},
+				{
+					"name": "admin",
+					"pattern": "admin/:tab:",
+					"target": "admin"
+				},
+				{
+					"name": "adminProduct",
+					"pattern": "admin/product/{productId}",
+					"target": "adminProduct"
+				}
+			],
+			"targets": {
+				"catalog": {
+					"id": "Catalog",
+					"name": "Catalog",
+					"level": 1
+				},
+				"product": {
+					"id": "Product",
+					"name": "Product",
+					"level": 2
+				},
+				"cart": {
+					"id": "Cart",
+					"name": "Cart",
+					"level": 3
+				},
+				"order": {
+					"id": "OrderTracking",
+					"name": "OrderTracking",
+					"level": 4
+				},
+				"login": {
+					"id": "Login",
+					"name": "Login",
+					"level": 1
+				},
+				"admin": {
+					"id": "Admin",
+					"name": "Admin",
+					"level": 2
+				},
+				"adminProduct": {
+					"id": "ProductEditor",
+					"name": "ProductEditor",
+					"level": 3
+				}
+			}
+		},
+		"rootView": {
+			"viewName": "apps.dflc.benditalook.view.App",
+			"type": "XML",
+			"id": "App",
+			"async": true
+		},
+		"flexBundle": false
+	}
+}

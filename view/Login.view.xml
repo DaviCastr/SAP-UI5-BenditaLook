@@ -1,0 +1,29 @@
+<mvc:View
+    controllerName="apps.dflc.benditalook.controller.Login"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Page id="loginPage" class="blPage blLoginPage">
+        <customHeader>
+            <core:Fragment fragmentName="apps.dflc.benditalook.view.fragments.StoreHeader" type="XML" />
+        </customHeader>
+        <content>
+            <FlexBox height="100%" justifyContent="Center" alignItems="Center">
+                <VBox alignItems="Center" class="blLoginCard">
+                    <Image src="img/logo.svg" width="4rem" height="4rem" decorative="true" class="sapUiSmallMarginBottom" />
+                    <Title text="{i18n>loginTitle}" level="H1" titleStyle="H3" textAlign="Center" />
+                    <Text text="{i18n>loginSubtitle}" textAlign="Center" class="sapUiSmallMarginTopBottom" />
+                    <Button
+                        text="{i18n>loginButton}"
+                        icon="sap-icon://log"
+                        type="Emphasized"
+                        width="100%"
+                        press=".onLogin"
+                        class="blPrimaryButton"
+                    />
+                </VBox>
+            </FlexBox>
+        </content>
+    </Page>
+</mvc:View>

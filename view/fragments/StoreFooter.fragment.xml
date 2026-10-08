@@ -1,0 +1,23 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <VBox alignItems="Center" class="blFooter">
+        <Text text="{i18n>footerText}" textAlign="Center" />
+        <HBox alignItems="Center" justifyContent="Center" class="sapUiSmallMarginTop">
+            <Button
+                icon="sap-icon://discussion"
+                text="{i18n>talkOnWhatsapp}"
+                type="Transparent"
+                press=".onContactWhatsapp"
+                visible="{= !!${store>/whatsapp} }"
+            />
+            <Button
+                icon="sap-icon://employee"
+                text="{i18n>adminArea}"
+                type="Transparent"
+                press=".onOpenAdmin"
+            />
+        </HBox>
+    </VBox>
+</core:FragmentDefinition>

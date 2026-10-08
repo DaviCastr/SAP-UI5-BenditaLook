@@ -1,0 +1,97 @@
+sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/core/UIComponent", "sap/ui/core/routing/History", "sap/m/MessageBox", "sap/m/MessageToast", "../model/formatter", "../util/feedback", "../util/http"], function (Controller, UIComponent, History, MessageBox, MessageToast, __formatter, ___util_feedback, ___util_http) {
+  "use strict";
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule && typeof obj.default !== "undefined" ? obj.default : obj;
+  }
+  const formatter = _interopRequireDefault(__formatter);
+  const getBackendErrorMessage = ___util_feedback["getBackendErrorMessage"];
+  const isBackendUnavailableError = ___util_http["isBackendUnavailableError"];
+  const isSessionExpiredError = ___util_http["isSessionExpiredError"];
+  /**
+   * @namespace apps.dflc.benditalook.controller
+   */
+  const BaseController = Controller.extend("apps.dflc.benditalook.controller.BaseController", {
+    constructor: function constructor() {
+      Controller.prototype.constructor.apply(this, arguments);
+      this.formatter = formatter;
+    },
+    getRouter: function _getRouter() {
+      return UIComponent.getRouterFor(this);
+    },
+    getAppComponent: function _getAppComponent() {
+      return this.getOwnerComponent();
+    },
+    navTo: function _navTo(route, parameters, replace) {
+      this.getRouter().navTo(route, parameters, replace);
+    },
+    onNavBack: function _onNavBack() {
+      if (History.getInstance().getPreviousHash() !== undefined) {
+        window.history.go(-1);
+        return;
+      }
+      this.navTo("catalog", {}, true);
+    },
+    onGoHome: function _onGoHome() {
+      this.navTo("catalog");
+    },
+    onOpenCart: function _onOpenCart() {
+      this.navTo("cart");
+    },
+    formatStatus: function _formatStatus(status) {
+      return status ? this.getText(`orderStatus.${status}`) : "";
+    },
+    getText: function _getText(key, parameters) {
+      const bundle = this.getAppComponent().getModel("i18n").getResourceBundle();
+      return bundle.getText(key, parameters) ?? key;
+    },
+    getCatalogModel: function _getCatalogModel() {
+      return this.getAppComponent().getModel("catalog");
+    },
+    getCartModel: function _getCartModel() {
+      return this.getAppComponent().getModel("cart");
+    },
+    getStoreModel: function _getStoreModel() {
+      return this.getAppComponent().getModel("store");
+    },
+    ensureAdminModel: function _ensureAdminModel() {
+      return this.getAppComponent().ensureAdminModel();
+    },
+    getAdminModel: function _getAdminModel() {
+      return this.getAppComponent().getModel();
+    },
+    showToast: function _showToast(key, parameters) {
+      MessageToast.show(this.getText(key, parameters));
+    },
+    confirm: function _confirm(key, parameters) {
+      return new Promise(resolve => {
+        MessageBox.confirm(this.getText(key, parameters), {
+          onClose: action => resolve(action === MessageBox.Action.OK)
+        });
+      });
+    },
+    handleError: function _handleError(error, key) {
+      if (isSessionExpiredError(error)) {
+        return;
+      }
+      if (isBackendUnavailableError(error)) {
+        MessageBox.error(this.getText("backendUnavailable"));
+        return;
+      }
+      const detail = getBackendErrorMessage(error);
+      const message = this.getText(key);
+      MessageBox.error(detail ? `${message}\n\n${detail}` : message);
+    },
+    runBusy: async function _runBusy(action) {
+      const view = this.getView();
+      view?.setBusy(true);
+      try {
+        return await action();
+      } finally {
+        view?.setBusy(false);
+      }
+    }
+  });
+  return BaseController;
+});
+//# sourceMappingURL=BaseController-dbg.js.map

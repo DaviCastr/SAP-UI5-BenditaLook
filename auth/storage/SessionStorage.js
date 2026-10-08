@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/util/Storage"],function(t){"use strict";class s{static STORAGE_KEY="benditaLook.session";static OAUTH_STATE_KEY="benditaLook.state";static save(s){t.put(this.STORAGE_KEY,s)}static load(){const s=t.get(this.STORAGE_KEY);return s??null}static clear(){t.remove(this.STORAGE_KEY)}static saveOauthState(s){t.put(this.OAUTH_STATE_KEY,s)}static loadOauthState(){const s=t.get(this.OAUTH_STATE_KEY);return s??null}}var a={__esModule:true};a.SessionStorage=s;return a});
+//# sourceMappingURL=SessionStorage.js.map

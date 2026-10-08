@@ -1,0 +1,2 @@
+sap.ui.define([],function(){"use strict";class t{constructor(t){this.catalogModel=t}async submitOrder(t,e){const r=this.catalogModel.bindContext("/SubmitOrder(...)");r.setParameter("Order",{...t,Items:e.map(t=>({Variant_ID:t.VariantId,Quantity:t.Quantity}))});await r.invoke();return r.getBoundContext().getObject()}async trackOrder(t,e){const r=this.catalogModel.bindContext("/TrackOrder(...)");r.setParameter("Number",t);r.setParameter("AccessCode",e);await r.invoke();return r.getBoundContext().getObject()}}return t});
+//# sourceMappingURL=OrderService.js.map

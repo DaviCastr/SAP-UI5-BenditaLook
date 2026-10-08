@@ -1,0 +1,2 @@
+sap.ui.define([],function(){"use strict";class t{constructor(t){this.adminModel=t}async changeStatus(t,e){const a=this.adminModel.bindContext("/ChangeOrderStatus(...)");a.setParameter("OrderId",t);a.setParameter("Status",e);await a.invoke()}}return t});
+//# sourceMappingURL=AdminOrderService.js.map

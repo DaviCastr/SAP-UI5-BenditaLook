@@ -1,0 +1,45 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Bar class="blHeader">
+        <contentLeft>
+            <Button
+                icon="sap-icon://nav-back"
+                type="Transparent"
+                tooltip="{i18n>back}"
+                press=".onNavBack"
+            />
+        </contentLeft>
+        <contentMiddle>
+            <HBox alignItems="Center" class="blBrand">
+                <Image
+                    src="img/logo.svg"
+                    width="2rem"
+                    height="2rem"
+                    alt="{i18n>appTitle}"
+                    press=".onGoHome"
+                    class="sapUiTinyMarginEnd"
+                />
+                <Link text="{i18n>appTitle}" press=".onGoHome" class="blBrandTitle" />
+            </HBox>
+        </contentMiddle>
+        <contentRight>
+            <Button
+                icon="sap-icon://cart"
+                type="Transparent"
+                tooltip="{i18n>cart}"
+                press=".onOpenCart"
+                class="blCartButton"
+            >
+                <customData>
+                    <BadgeCustomData
+                        key="badge"
+                        value="{cart>/count}"
+                        visible="{= ${cart>/count} > 0 }"
+                    />
+                </customData>
+            </Button>
+        </contentRight>
+    </Bar>
+</core:FragmentDefinition>

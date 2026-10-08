@@ -1,0 +1,28 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+>
+    <Dialog
+        id="categoryDialog"
+        title="{= ${path: 'HasActiveEntity', targetType: 'any'} ? ${i18n>editCategory} : ${i18n>newCategory} }"
+        contentWidth="28rem"
+        class="blDialog"
+        escapeHandler=".categories.onCancelCategory"
+    >
+        <content>
+            <form:SimpleForm editable="true" layout="ColumnLayout">
+                <Label text="{i18n>categoryName}" required="true" />
+                <Input value="{Name}" maxLength="60" />
+                <Label text="{i18n>description}" />
+                <TextArea value="{Description}" maxLength="255" rows="3" />
+                <Label text="{i18n>activeInStore}" />
+                <Switch state="{Active}" customTextOn="{i18n>yes}" customTextOff="{i18n>no}" />
+            </form:SimpleForm>
+        </content>
+        <buttons>
+            <Button text="{i18n>save}" type="Emphasized" press=".categories.onSaveCategory" />
+            <Button text="{i18n>cancel}" press=".categories.onCancelCategory" />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

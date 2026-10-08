@@ -1,0 +1,68 @@
+import JSONModel from "sap/ui/model/json/JSONModel";
+import type { Route$PatternMatchedEvent } from "sap/ui/core/routing/Route";
+import BaseController from "./BaseController";
+import OrderService from "../service/OrderService";
+import formatter, { OrderStatus } from "../model/formatter";
+
+interface TrackingStep {
+    text: string;
+    icon: string;
+    done: boolean;
+}
+
+const STEPS = [OrderStatus.New, OrderStatus.InService, OrderStatus.Completed];
+
+/**
+ * @namespace apps.dflc.benditalook.controller
+ */
+export default class OrderTracking extends BaseController {
+
+    private trackingModel: JSONModel;
+
+    public onInit(): void {
+        this.trackingModel = new JSONModel({ loaded: false, order: null, steps: [], cancelled: false });
+        this.getView()?.setModel(this.trackingModel, "tracking");
+        this.getRouter().getRoute("order")?.attachPatternMatched((event) => this.onRouteMatched(event));
+    }
+
+    public onContactWhatsapp(): void {
+        const orderNumber = this.trackingModel.getProperty("/order/Number") as number;
+        const message = this.getText("whatsappOrderMessage", [orderNumber]);
+
+        window.open(formatter.whatsappUrl(this.getStoreModel().getProperty("/whatsapp") as string, message), "_blank");
+    }
+
+    public onContinueShopping(): void {
+        this.navTo("catalog");
+    }
+
+    private async onRouteMatched(event: Route$PatternMatchedEvent): Promise<void> {
+        const { orderNumber, accessCode } = event.getParameter("arguments") as { orderNumber: string; accessCode: string };
+
+        this.trackingModel.setProperty("/loaded", false);
+
+        try {
+            const order = await this.runBusy(() => new OrderService(this.getCatalogModel()).trackOrder(Number(orderNumber), accessCode));
+
+            this.trackingModel.setData({
+                loaded: true,
+                order,
+                cancelled: order.Status === OrderStatus.Cancelled,
+                steps: this.buildSteps(order.Status as OrderStatus)
+            });
+        } catch (error) {
+            this.handleError(error, "orderNotFound");
+        }
+    }
+
+    private buildSteps(status: OrderStatus): TrackingStep[] {
+        const currentIndex = STEPS.indexOf(status);
+
+        return STEPS.map((step, index) => ({
+            text: this.formatStatus(step),
+            icon: index <= currentIndex ? "sap-icon://sys-enter-2" : "sap-icon://circle-task",
+            done: index <= currentIndex
+        }));
+    }
+
+}

@@ -1,0 +1,2 @@
+sap.ui.define(["./MockAuthenticationProvider","./XsuaaAuthenticationProvider","./XsuaaAuthHelper"],function(t,e,r){"use strict";const a=t["MockAuthenticationProvider"];const i=e["XsuaaAuthenticationProvider"];const n=r["XsuaaAuthHelper"];class u{static create(){return n.getConfig().auth?new i:new a}}var o={__esModule:true};o.AuthenticatedProviderFactory=u;return o});
+//# sourceMappingURL=AuthenticatedProviderFactory.js.map

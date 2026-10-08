@@ -1,0 +1,64 @@
+sap.ui.define(["sap/ui/model/json/JSONModel", "./BaseController", "../service/OrderService", "../model/formatter"], function (JSONModel, __BaseController, __OrderService, __formatter) {
+  "use strict";
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule && typeof obj.default !== "undefined" ? obj.default : obj;
+  }
+  const BaseController = _interopRequireDefault(__BaseController);
+  const OrderService = _interopRequireDefault(__OrderService);
+  const formatter = _interopRequireDefault(__formatter);
+  const OrderStatus = __formatter["OrderStatus"];
+  const STEPS = [OrderStatus.New, OrderStatus.InService, OrderStatus.Completed];
+
+  /**
+   * @namespace apps.dflc.benditalook.controller
+   */
+  const OrderTracking = BaseController.extend("apps.dflc.benditalook.controller.OrderTracking", {
+    onInit: function _onInit() {
+      this.trackingModel = new JSONModel({
+        loaded: false,
+        order: null,
+        steps: [],
+        cancelled: false
+      });
+      this.getView()?.setModel(this.trackingModel, "tracking");
+      this.getRouter().getRoute("order")?.attachPatternMatched(event => this.onRouteMatched(event));
+    },
+    onContactWhatsapp: function _onContactWhatsapp() {
+      const orderNumber = this.trackingModel.getProperty("/order/Number");
+      const message = this.getText("whatsappOrderMessage", [orderNumber]);
+      window.open(formatter.whatsappUrl(this.getStoreModel().getProperty("/whatsapp"), message), "_blank");
+    },
+    onContinueShopping: function _onContinueShopping() {
+      this.navTo("catalog");
+    },
+    onRouteMatched: async function _onRouteMatched(event) {
+      const {
+        orderNumber,
+        accessCode
+      } = event.getParameter("arguments");
+      this.trackingModel.setProperty("/loaded", false);
+      try {
+        const order = await this.runBusy(() => new OrderService(this.getCatalogModel()).trackOrder(Number(orderNumber), accessCode));
+        this.trackingModel.setData({
+          loaded: true,
+          order,
+          cancelled: order.Status === OrderStatus.Cancelled,
+          steps: this.buildSteps(order.Status)
+        });
+      } catch (error) {
+        this.handleError(error, "orderNotFound");
+      }
+    },
+    buildSteps: function _buildSteps(status) {
+      const currentIndex = STEPS.indexOf(status);
+      return STEPS.map((step, index) => ({
+        text: this.formatStatus(step),
+        icon: index <= currentIndex ? "sap-icon://sys-enter-2" : "sap-icon://circle-task",
+        done: index <= currentIndex
+      }));
+    }
+  });
+  return OrderTracking;
+});
+//# sourceMappingURL=OrderTracking-dbg.controller.js.map

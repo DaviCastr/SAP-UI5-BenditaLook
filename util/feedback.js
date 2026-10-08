@@ -1,0 +1,2 @@
+sap.ui.define([],function(){"use strict";const e=/^(Communication error|Network error|Failed to fetch)/i;function r(r){const t=new Set;let s=r;while(s&&!t.has(s)){t.add(s);const r=s;const n=r.error?.message;if(typeof n==="string"&&n.trim()){return n}if(typeof r.message==="string"&&r.message.trim()&&!e.test(r.message)){return r.message}s=r.cause}return undefined}var t={__esModule:true};t.getBackendErrorMessage=r;return t});
+//# sourceMappingURL=feedback.js.map
