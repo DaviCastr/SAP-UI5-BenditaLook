@@ -6,9 +6,11 @@ import OrdersSection from "./admin/OrdersSection";
 import ProductsSection from "./admin/ProductsSection";
 import CategoriesSection from "./admin/CategoriesSection";
 import BackupSection from "./admin/BackupSection";
+import ReportsSection from "./admin/ReportsSection";
 import { AuthenticationService } from "../auth/AuthenticationService";
 
 const DEFAULT_TAB = "orders";
+const REPORTS_TAB = "reports";
 
 /**
  * @namespace apps.dflc.benditalook.controller
@@ -23,11 +25,14 @@ export default class Admin extends BaseController {
 
     public readonly backup = new BackupSection(this);
 
+    public readonly reports = new ReportsSection(this);
+
     private viewModel: JSONModel;
 
     public onInit(): void {
         this.viewModel = new JSONModel({ tab: DEFAULT_TAB, userName: "" });
         this.getView()?.setModel(this.viewModel, "adminView");
+        this.getView()?.setModel(this.reports.model, "report");
 
         this.getRouter().getRoute("admin")?.attachPatternMatched((event) => this.onRouteMatched(event));
     }
@@ -58,9 +63,15 @@ export default class Admin extends BaseController {
             return;
         }
 
-        this.viewModel.setProperty("/tab", tab || DEFAULT_TAB);
+        const selectedTab = tab || DEFAULT_TAB;
+
+        this.viewModel.setProperty("/tab", selectedTab);
         this.viewModel.setProperty("/userName", AuthenticationService.getSession()?.userName ?? "");
         this.products.refresh();
+
+        if (selectedTab === REPORTS_TAB) {
+            await this.reports.load();
+        }
     }
 
 }

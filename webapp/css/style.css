@@ -232,6 +232,34 @@
     box-shadow: 0 8px 32px rgba(120, 40, 70, 0.12);
 }
 
+.blKpis {
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.blKpi {
+    flex: 1 1 10rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--bl-radius);
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(120, 40, 70, 0.06);
+}
+
+.blKpiLabel {
+    font-size: 0.8rem;
+    color: var(--bl-muted);
+}
+
+.blKpiValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--bl-primary);
+}
+
+.blBar .sapMPIBar {
+    background: var(--bl-accent);
+}
+
 .blTabs .sapMITBContent {
     background: var(--bl-soft);
 }
