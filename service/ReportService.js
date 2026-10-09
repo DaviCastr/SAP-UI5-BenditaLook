@@ -1,0 +1,2 @@
+sap.ui.define([],function(){"use strict";class t{constructor(t){this.adminModel=t}async salesReport(t){const e=this.adminModel.bindContext("/SalesReport(...)");e.setParameter("Year",t);await e.invoke();return e.getBoundContext().getObject()}}return t});
+//# sourceMappingURL=ReportService.js.map

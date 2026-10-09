@@ -202,6 +202,104 @@
                         </Table>
                     </IconTabFilter>
 
+                    <IconTabFilter key="reports" icon="sap-icon://line-chart" text="{i18n>reportsTab}">
+                        <Toolbar style="Clear">
+                            <Label text="{i18n>reportYear}" class="sapUiTinyMarginEnd" />
+                            <Select selectedKey="{report>/year}" items="{report>/years}" change=".reports.onYearChange" width="8rem">
+                                <core:Item key="{report>key}" text="{report>key}" />
+                            </Select>
+                            <ToolbarSpacer />
+                            <Button icon="sap-icon://refresh" tooltip="{i18n>refresh}" press=".reports.onRefresh" />
+                        </Toolbar>
+
+                        <FlexBox wrap="Wrap" class="blKpis" visible="{report>/loaded}">
+                            <VBox class="blKpi">
+                                <Text text="{i18n>kpiRevenue}" class="blKpiLabel" />
+                                <Text text="{path: 'report>/summary/Revenue', formatter: '.formatter.currency'}" class="blKpiValue" />
+                            </VBox>
+                            <VBox class="blKpi">
+                                <Text text="{i18n>kpiCompletedOrders}" class="blKpiLabel" />
+                                <Text text="{report>/summary/CompletedOrders}" class="blKpiValue" />
+                            </VBox>
+                            <VBox class="blKpi">
+                                <Text text="{i18n>kpiItemsSold}" class="blKpiLabel" />
+                                <Text text="{report>/summary/ItemsSold}" class="blKpiValue" />
+                            </VBox>
+                            <VBox class="blKpi">
+                                <Text text="{i18n>kpiAverageTicket}" class="blKpiLabel" />
+                                <Text text="{path: 'report>/summary/AverageTicket', formatter: '.formatter.currency'}" class="blKpiValue" />
+                            </VBox>
+                            <VBox class="blKpi">
+                                <Text text="{i18n>kpiOpenOrders}" class="blKpiLabel" />
+                                <Text text="{report>/summary/OpenOrders}" class="blKpiValue" />
+                                <Text text="{path: 'report>/summary/OpenAmount', formatter: '.formatter.currency'}" class="blMuted" />
+                            </VBox>
+                            <VBox class="blKpi">
+                                <Text text="{i18n>kpiCancelledOrders}" class="blKpiLabel" />
+                                <Text text="{report>/summary/CancelledOrders}" class="blKpiValue" />
+                            </VBox>
+                        </FlexBox>
+
+                        <MessageStrip text="{i18n>reportInfo}" type="Information" showIcon="true" class="sapUiSmallMarginTopBottom" />
+
+                        <Table items="{report>/months}" class="blTable" headerText="{i18n>monthlySales}">
+                            <columns>
+                                <Column width="8rem">
+                                    <Text text="{i18n>month}" />
+                                </Column>
+                                <Column hAlign="Center" width="6rem">
+                                    <Text text="{i18n>ordersTab}" />
+                                </Column>
+                                <Column hAlign="Center" width="8rem" minScreenWidth="Tablet" demandPopin="true">
+                                    <Text text="{i18n>kpiItemsSold}" />
+                                </Column>
+                                <Column hAlign="End" width="9rem">
+                                    <Text text="{i18n>kpiRevenue}" />
+                                </Column>
+                                <Column minScreenWidth="Tablet" demandPopin="true" />
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{report>month}" />
+                                        <Text text="{report>orders}" />
+                                        <Text text="{report>items}" />
+                                        <Text text="{path: 'report>revenue', formatter: '.formatter.currency'}" />
+                                        <ProgressIndicator percentValue="{report>share}" showValue="false" height="0.75rem" class="blBar" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+
+                        <Table
+                            items="{report>/topProducts}"
+                            class="blTable sapUiMediumMarginTop"
+                            headerText="{i18n>topProducts}"
+                            noDataText="{i18n>noSalesInYear}"
+                        >
+                            <columns>
+                                <Column>
+                                    <Text text="{i18n>product}" />
+                                </Column>
+                                <Column hAlign="Center" width="8rem">
+                                    <Text text="{i18n>kpiItemsSold}" />
+                                </Column>
+                                <Column hAlign="End" width="9rem">
+                                    <Text text="{i18n>kpiRevenue}" />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{report>ProductName}" />
+                                        <Text text="{report>Quantity}" />
+                                        <Text text="{path: 'report>Revenue', formatter: '.formatter.currency'}" />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+
                     <IconTabFilter key="backup" icon="sap-icon://database" text="{i18n>backupTab}">
                         <VBox class="blContainer">
                             <MessageStrip text="{i18n>backupInfo}" type="Information" showIcon="true" class="sapUiSmallMarginBottom" />

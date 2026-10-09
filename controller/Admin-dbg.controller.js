@@ -1,4 +1,4 @@
-sap.ui.define(["sap/ui/model/json/JSONModel", "./BaseController", "./admin/OrdersSection", "./admin/ProductsSection", "./admin/CategoriesSection", "./admin/BackupSection", "../auth/AuthenticationService"], function (JSONModel, __BaseController, __OrdersSection, __ProductsSection, __CategoriesSection, __BackupSection, ___auth_AuthenticationService) {
+sap.ui.define(["sap/ui/model/json/JSONModel", "./BaseController", "./admin/OrdersSection", "./admin/ProductsSection", "./admin/CategoriesSection", "./admin/BackupSection", "./admin/ReportsSection", "../auth/AuthenticationService"], function (JSONModel, __BaseController, __OrdersSection, __ProductsSection, __CategoriesSection, __BackupSection, __ReportsSection, ___auth_AuthenticationService) {
   "use strict";
 
   function _interopRequireDefault(obj) {
@@ -9,8 +9,10 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "./BaseController", "./admin/Order
   const ProductsSection = _interopRequireDefault(__ProductsSection);
   const CategoriesSection = _interopRequireDefault(__CategoriesSection);
   const BackupSection = _interopRequireDefault(__BackupSection);
+  const ReportsSection = _interopRequireDefault(__ReportsSection);
   const AuthenticationService = ___auth_AuthenticationService["AuthenticationService"];
   const DEFAULT_TAB = "orders";
+  const REPORTS_TAB = "reports";
 
   /**
    * @namespace apps.dflc.benditalook.controller
@@ -22,6 +24,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "./BaseController", "./admin/Order
       this.products = new ProductsSection(this);
       this.categories = new CategoriesSection(this);
       this.backup = new BackupSection(this);
+      this.reports = new ReportsSection(this);
     },
     onInit: function _onInit() {
       this.viewModel = new JSONModel({
@@ -29,6 +32,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "./BaseController", "./admin/Order
         userName: ""
       });
       this.getView()?.setModel(this.viewModel, "adminView");
+      this.getView()?.setModel(this.reports.model, "report");
       this.getRouter().getRoute("admin")?.attachPatternMatched(event => this.onRouteMatched(event));
     },
     onTabSelect: function _onTabSelect(event) {
@@ -55,9 +59,13 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "./BaseController", "./admin/Order
         this.navTo("login", {}, true);
         return;
       }
-      this.viewModel.setProperty("/tab", tab || DEFAULT_TAB);
+      const selectedTab = tab || DEFAULT_TAB;
+      this.viewModel.setProperty("/tab", selectedTab);
       this.viewModel.setProperty("/userName", AuthenticationService.getSession()?.userName ?? "");
       this.products.refresh();
+      if (selectedTab === REPORTS_TAB) {
+        await this.reports.load();
+      }
     }
   });
   return Admin;
