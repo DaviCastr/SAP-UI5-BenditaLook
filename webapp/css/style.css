@@ -205,6 +205,13 @@
     padding: 1rem 0.5rem;
 }
 
+.blDeliveryCard {
+    padding: 1rem 1.25rem;
+    border-radius: var(--bl-radius);
+    background: #ffffff;
+    border-left: 4px solid var(--bl-accent);
+}
+
 .blSteps {
     background: #ffffff;
     border-radius: var(--bl-radius);

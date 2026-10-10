@@ -4,13 +4,27 @@
 >
     <VBox alignItems="Center" class="blFooter">
         <Text text="{i18n>footerText}" textAlign="Center" />
-        <HBox alignItems="Center" justifyContent="Center" class="sapUiSmallMarginTop">
+        <HBox alignItems="Center" justifyContent="Center" wrap="Wrap" class="sapUiSmallMarginTop">
             <Button
                 icon="sap-icon://discussion"
                 text="{i18n>talkOnWhatsapp}"
                 type="Transparent"
                 press=".onContactWhatsapp"
-                visible="{= !!${store>/whatsapp} }"
+                visible="{= !!${store>/Whatsapp} }"
+            />
+            <Button
+                icon="sap-icon://email"
+                text="{store>/ContactEmail}"
+                type="Transparent"
+                press=".onContactEmail"
+                visible="{= !!${store>/ContactEmail} }"
+            />
+            <Button
+                icon="sap-icon://camera"
+                text="{store>/Instagram}"
+                type="Transparent"
+                press=".onOpenInstagram"
+                visible="{= !!${store>/Instagram} }"
             />
             <Button
                 icon="sap-icon://employee"

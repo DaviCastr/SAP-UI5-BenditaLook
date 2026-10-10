@@ -4,6 +4,7 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:unified="sap.ui.unified"
+    xmlns:form="sap.ui.layout.form"
 >
     <Page id="adminPage" class="blPage">
         <customHeader>
@@ -15,7 +16,7 @@
                     </HBox>
                 </contentLeft>
                 <contentRight>
-                    <Text text="{adminView>/userName}" class="blMuted sapUiSmallMarginEnd" />
+                    <Text text="{= ${adminView>/userName} || ${i18n>administrator} }" class="blMuted sapUiSmallMarginEnd" />
                     <Button icon="sap-icon://retail-store" tooltip="{i18n>openStore}" type="Transparent" press=".onOpenStore" />
                     <Button icon="sap-icon://log" tooltip="{i18n>logout}" type="Transparent" press=".onLogout" />
                 </contentRight>
@@ -38,6 +39,7 @@
                                     <SegmentedButtonItem key="ALL" text="{i18n>allOrders}" />
                                     <SegmentedButtonItem key="NEW" text="{i18n>orderStatus.NEW}" />
                                     <SegmentedButtonItem key="IN_SERVICE" text="{i18n>orderStatus.IN_SERVICE}" />
+                                    <SegmentedButtonItem key="OUT_FOR_DELIVERY" text="{i18n>orderStatus.OUT_FOR_DELIVERY}" />
                                     <SegmentedButtonItem key="COMPLETED" text="{i18n>orderStatus.COMPLETED}" />
                                     <SegmentedButtonItem key="CANCELLED" text="{i18n>orderStatus.CANCELLED}" />
                                 </items>
@@ -298,6 +300,62 @@
                                 </ColumnListItem>
                             </items>
                         </Table>
+                    </IconTabFilter>
+
+                    <IconTabFilter key="settings" icon="sap-icon://action-settings" text="{i18n>settingsTab}">
+                        <VBox class="blContainer">
+                            <MessageStrip text="{i18n>settingsInfo}" type="Information" showIcon="true" class="sapUiSmallMarginBottom" />
+                            <form:SimpleForm
+                                id="settingsForm"
+                                editable="true"
+                                layout="ColumnLayout"
+                                columnsM="2"
+                                columnsL="2"
+                                columnsXL="2"
+                                title="{i18n>storeData}"
+                                visible="{settings>/loaded}"
+                                class="blForm"
+                            >
+                                <Label text="{i18n>storeName}" required="true" />
+                                <Input value="{StoreName}" maxLength="80" editable="{settings>/editing}" />
+                                <Label text="{i18n>storeWhatsapp}" />
+                                <Input value="{Whatsapp}" maxLength="20" type="Tel" placeholder="{i18n>storeWhatsappPlaceholder}" editable="{settings>/editing}" />
+                                <Label text="{i18n>storeEmail}" />
+                                <Input value="{ContactEmail}" maxLength="120" type="Email" editable="{settings>/editing}" />
+                                <Label text="{i18n>storeInstagram}" />
+                                <Input value="{Instagram}" maxLength="60" placeholder="{i18n>storeInstagramPlaceholder}" editable="{settings>/editing}" />
+                                <Label text="{i18n>notificationEmails}" />
+                                <TextArea
+                                    value="{NotificationEmails}"
+                                    maxLength="500"
+                                    rows="2"
+                                    placeholder="{i18n>notificationEmailsPlaceholder}"
+                                    editable="{settings>/editing}"
+                                />
+                            </form:SimpleForm>
+                            <HBox justifyContent="End" class="sapUiSmallMarginTop">
+                                <Button
+                                    text="{i18n>edit}"
+                                    icon="sap-icon://edit"
+                                    type="Emphasized"
+                                    visible="{= ${settings>/loaded} &amp;&amp; !${settings>/editing} }"
+                                    press=".settings.onEdit"
+                                />
+                                <Button
+                                    text="{i18n>cancel}"
+                                    visible="{settings>/editing}"
+                                    press=".settings.onCancel"
+                                    class="sapUiSmallMarginEnd"
+                                />
+                                <Button
+                                    text="{i18n>save}"
+                                    icon="sap-icon://save"
+                                    type="Emphasized"
+                                    visible="{settings>/editing}"
+                                    press=".settings.onSave"
+                                />
+                            </HBox>
+                        </VBox>
                     </IconTabFilter>
 
                     <IconTabFilter key="backup" icon="sap-icon://database" text="{i18n>backupTab}">

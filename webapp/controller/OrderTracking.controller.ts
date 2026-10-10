@@ -10,7 +10,7 @@ interface TrackingStep {
     done: boolean;
 }
 
-const STEPS = [OrderStatus.New, OrderStatus.InService, OrderStatus.Completed];
+const STEPS = [OrderStatus.New, OrderStatus.InService, OrderStatus.OutForDelivery, OrderStatus.Completed];
 
 /**
  * @namespace apps.dflc.benditalook.controller
@@ -29,7 +29,7 @@ export default class OrderTracking extends BaseController {
         const orderNumber = this.trackingModel.getProperty("/order/Number") as number;
         const message = this.getText("whatsappOrderMessage", [orderNumber]);
 
-        window.open(formatter.whatsappUrl(this.getStoreModel().getProperty("/whatsapp") as string, message), "_blank");
+        window.open(formatter.whatsappUrl(this.getStoreModel().getProperty("/Whatsapp") as string, message), "_blank");
     }
 
     public onContinueShopping(): void {
@@ -48,17 +48,20 @@ export default class OrderTracking extends BaseController {
                 loaded: true,
                 order,
                 cancelled: order.Status === OrderStatus.Cancelled,
-                steps: this.buildSteps(order.Status as OrderStatus)
+                hasDelivery: !!order.DeliveryType,
+                deliveryTypeText: this.formatDeliveryType(order.DeliveryType),
+                steps: this.buildSteps(order.Status as OrderStatus, !!order.DeliveryType)
             });
         } catch (error) {
             this.handleError(error, "orderNotFound");
         }
     }
 
-    private buildSteps(status: OrderStatus): TrackingStep[] {
-        const currentIndex = STEPS.indexOf(status);
+    private buildSteps(status: OrderStatus, hasDelivery: boolean): TrackingStep[] {
+        const steps = STEPS.filter((step) => step !== OrderStatus.OutForDelivery || hasDelivery || status !== OrderStatus.Completed);
+        const currentIndex = steps.indexOf(status);
 
-        return STEPS.map((step, index) => ({
+        return steps.map((step, index) => ({
             text: this.formatStatus(step),
             icon: index <= currentIndex ? "sap-icon://sys-enter-2" : "sap-icon://circle-task",
             done: index <= currentIndex

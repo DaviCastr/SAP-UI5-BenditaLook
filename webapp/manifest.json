@@ -5,7 +5,7 @@
     "type": "application",
     "i18n": {
       "bundleUrl": "i18n/i18n.properties",
-      "supportedLocales": [""],
+      "supportedLocales": ["", "en"],
       "fallbackLocale": ""
     },
     "applicationVersion": {
@@ -45,7 +45,7 @@
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
           "bundleName": "apps.dflc.benditalook.i18n.i18n",
-          "supportedLocales": [""],
+          "supportedLocales": ["", "en"],
           "fallbackLocale": ""
         }
       }

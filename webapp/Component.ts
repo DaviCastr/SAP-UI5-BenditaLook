@@ -13,6 +13,7 @@ import { SessionStorage } from "./auth/storage/SessionStorage";
 import Environment from "./util/Environment";
 import { isBackendUnavailableError, isSessionExpiredError } from "./util/http";
 import { getBackendErrorMessage } from "./util/feedback";
+import StoreService from "./service/StoreService";
 
 const ADMIN_ROUTE = "admin";
 const LOGIN_ROUTE = "login";
@@ -50,8 +51,10 @@ export default class Component extends BaseComponent {
 
         this.setModel(createDeviceModel(), "device");
         this.setModel(new CartModel(), "cart");
-        this.setModel(new JSONModel({ whatsapp: XsuaaAuthHelper.getConfig().storeWhatsapp }), "store");
+        this.setModel(new JSONModel({}), "store");
         this.setModel(this.createODataModel(XsuaaAuthHelper.getConfig().catalogService), "catalog");
+
+        void this.refreshStoreInfo();
 
         this.getRouter().initialize();
 
@@ -75,6 +78,15 @@ export default class Component extends BaseComponent {
         current?.destroy();
 
         return model;
+    }
+
+    public async refreshStoreInfo(): Promise<void> {
+        try {
+            const storeInfo = await new StoreService(this.getModel("catalog") as ODataModel).storeInfo();
+            (this.getModel("store") as JSONModel).setData(storeInfo);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     public handleUnexpectedError(reason: unknown): void {

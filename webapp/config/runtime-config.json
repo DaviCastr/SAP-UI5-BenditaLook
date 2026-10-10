@@ -1,7 +1,6 @@
 {
   "catalogService": "https://d4e1c97ctrial-dev-benditalook-srv.cfapps.us10-001.hana.ondemand.com/service/Catalog/",
   "adminService": "https://d4e1c97ctrial-dev-benditalook-srv.cfapps.us10-001.hana.ondemand.com/service/BenditaLook/",
-  "storeWhatsapp": "",
   "auth": {
     "authDomain": "https://d4e1c97ctrial.authentication.us10.hana.ondemand.com",
     "clientId": "sb-BenditaLook-uaa-dev!t724933",

@@ -151,6 +151,7 @@ export default class ProductEditor extends BaseController {
         this.editorModel.setData({ colorOptions: [], imageUrls: {} });
 
         this.getView()?.bindElement({ path: `/Products(ID=${productId},IsActiveEntity=false)` });
+        (this.byId("categorySelect")?.getBinding("items") as ODataListBinding | undefined)?.refresh();
     }
 
     private refreshColorOptions(): void {

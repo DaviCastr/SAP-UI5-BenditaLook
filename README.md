@@ -11,7 +11,7 @@ App UI5 (TypeScript, MVC) da loja Bendita Look, separado do backend [SAP-CAP-Ben
 | `#/cart` | Público | Carrinho (salvo no navegador) e formulário de contato para enviar o pedido |
 | `#/order/{número}/{código}` | Público (link do email) | Acompanhamento do pedido |
 | `#/login` | - | Login da área administrativa (XSUAA) |
-| `#/admin/:aba:` | Role `Admin` | Pedidos (status + WhatsApp), produtos, categorias e backup |
+| `#/admin/:aba:` | Role `Admin` | Pedidos (status, entrega e WhatsApp), produtos, categorias, relatórios, configurações da loja e backup |
 | `#/admin/product/{id}` | Role `Admin` | Editor do produto em draft: dados, cores, tamanhos/estoque e fotos |
 
 ## Estrutura
@@ -30,6 +30,8 @@ webapp/
 
 São dois modelos OData V4: `catalog` (público, sempre carregado) e o modelo padrão do serviço admin, criado só após o login.
 
+Os textos ficam em `i18n/i18n.properties` (português, padrão) e `i18n/i18n_en.properties` (inglês); o idioma segue o navegador. Nome, WhatsApp, email e Instagram da loja vêm do backend (`StoreInfo`), editáveis na aba Configurações.
+
 As fotos são redimensionadas no navegador (máx. 1200px, JPEG) antes do upload.
 
 ## Desenvolvimento local
@@ -46,6 +48,6 @@ O proxy local (`custom-proxy`) encaminha `/api/service/...` e `/auth/...` para o
 ## Publicação (GitHub Pages)
 
 1. Faça o deploy do CAP no BTP Trial (ver README do CAP).
-2. Preencha `webapp/config/runtime-config.json` com a URL do serviço CAP, o WhatsApp da loja e os dados do XSUAA (`authDomain`, `clientId`, `scope`), obtidos na service key do `BenditaLook-uaa`.
+2. Preencha `webapp/config/runtime-config.json` com a URL do serviço CAP e os dados do XSUAA (`authDomain`, `clientId`, `scope`), obtidos na service key do `BenditaLook-uaa`.
 3. Faça push na `main`: o workflow `.github/workflows/deploy.yml` gera o build e publica na branch `gh-pages`.
 4. Em Settings > Pages do repositório, selecione a branch `gh-pages`.

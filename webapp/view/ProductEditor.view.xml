@@ -30,6 +30,7 @@
                     <Input value="{Name}" maxLength="120" />
                     <Label text="{i18n>category}" required="true" />
                     <Select
+                        id="categorySelect"
                         selectedKey="{Category_ID}"
                         forceSelection="false"
                         width="100%"
@@ -38,7 +39,7 @@
                         <core:Item key="{ID}" text="{Name}" />
                     </Select>
                     <Label text="{i18n>price}" required="true" />
-                    <Input value="{Price}" description="R$" />
+                    <Input value="{Price}" description="{i18n>currencySymbol}" />
                     <Label text="{i18n>activeInStore}" />
                     <Switch state="{Active}" customTextOn="{i18n>yes}" customTextOff="{i18n>no}" />
                     <Label text="{i18n>featured}" />
@@ -75,7 +76,7 @@
                             <cells>
                                 <Input value="{Name}" maxLength="40" change=".onColorNameChange" />
                                 <HBox alignItems="Center">
-                                    <Input value="{HexCode}" maxLength="7" placeholder="#RRGGBB" width="8rem" />
+                                    <Input value="{HexCode}" maxLength="7" placeholder="{i18n>hexPlaceholder}" width="8rem" />
                                     <Button icon="sap-icon://palette" type="Transparent" tooltip="{i18n>pickColor}" press=".onOpenColorPicker" />
                                 </HBox>
                                 <Button icon="sap-icon://delete" type="Transparent" tooltip="{i18n>delete}" press=".onDeleteRow" />
