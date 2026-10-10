@@ -12,7 +12,6 @@ interface AuthConfig {
 export interface RuntimeConfig {
     catalogService: string;
     adminService: string;
-    storeWhatsapp: string;
     auth?: AuthConfig;
 }
 
@@ -33,8 +32,7 @@ const MIN_TOKEN_LIFETIME_SECONDS = 60;
 
 let runtimeConfig: RuntimeConfig = {
     catalogService: LOCAL_CATALOG_SERVICE,
-    adminService: LOCAL_ADMIN_SERVICE,
-    storeWhatsapp: ""
+    adminService: LOCAL_ADMIN_SERVICE
 };
 
 export class XsuaaAuthHelper {
@@ -100,7 +98,7 @@ export class XsuaaAuthHelper {
             accessToken: tokenResponse.access_token,
             refreshToken: tokenResponse.refresh_token,
             expiresAt: Date.now() + (expiresIn * 1000),
-            userName: tokenResponse.user_name ?? this.extractUserName(tokenResponse.id_token) ?? "Admin"
+            userName: tokenResponse.user_name ?? this.extractUserName(tokenResponse.id_token) ?? ""
         };
     }
 
@@ -131,7 +129,6 @@ export class XsuaaAuthHelper {
         runtimeConfig = {
             catalogService: payload.catalogService || LOCAL_CATALOG_SERVICE,
             adminService: payload.adminService || LOCAL_ADMIN_SERVICE,
-            storeWhatsapp: payload.storeWhatsapp ?? "",
             auth: payload.auth
         };
     }

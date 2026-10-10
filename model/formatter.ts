@@ -1,10 +1,12 @@
 import formatMessage from "sap/base/strings/formatMessage";
+import Localization from "sap/base/i18n/Localization";
 import { ValueState } from "sap/ui/core/library";
 import { XsuaaAuthHelper } from "../auth/providers/XsuaaAuthHelper";
 
 export enum OrderStatus {
     New = "NEW",
     InService = "IN_SERVICE",
+    OutForDelivery = "OUT_FOR_DELIVERY",
     Completed = "COMPLETED",
     Cancelled = "CANCELLED"
 }
@@ -19,17 +21,21 @@ interface StockReference {
 }
 
 const PLACEHOLDER_IMAGE = "img/placeholder.svg";
-
-const currencyFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-
-const dateTimeFormatter = new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" });
+const CURRENCY = "BRL";
+const BRAZIL_COUNTRY_CODE = "55";
+const LOCAL_PHONE_MAX_DIGITS = 11;
 
 const STATUS_STATES: Record<string, ValueState> = {
     [OrderStatus.New]: ValueState.Information,
     [OrderStatus.InService]: ValueState.Warning,
+    [OrderStatus.OutForDelivery]: ValueState.Warning,
     [OrderStatus.Completed]: ValueState.Success,
     [OrderStatus.Cancelled]: ValueState.Error
 };
+
+function languageTag(): string {
+    return Localization.getLanguageTag().toString();
+}
 
 function catalogImageUrl(imageId: string | null | undefined): string {
     return imageId
@@ -41,10 +47,18 @@ function totalStock(variants: StockReference[] | null | undefined): number {
     return (variants ?? []).reduce((total, variant) => total + (variant.Stock ?? 0), 0);
 }
 
+function whatsappUrl(phone: string | null | undefined, message?: string): string {
+    const digits = (phone ?? "").replace(/\D/g, "");
+    const fullNumber = digits.length <= LOCAL_PHONE_MAX_DIGITS ? `${BRAZIL_COUNTRY_CODE}${digits}` : digits;
+    const text = message ? `?text=${encodeURIComponent(message)}` : "";
+
+    return `https://wa.me/${fullNumber}${text}`;
+}
+
 export default {
 
     currency(value: number | string | null | undefined): string {
-        return currencyFormatter.format(Number(value ?? 0));
+        return new Intl.NumberFormat(languageTag(), { style: "currency", currency: CURRENCY }).format(Number(value ?? 0));
     },
 
     message(pattern: string, ...values: unknown[]): string {
@@ -60,12 +74,14 @@ export default {
     },
 
     dateTime(value: string | null | undefined): string {
-        return value ? dateTimeFormatter.format(new Date(value)) : "";
+        return value ? new Intl.DateTimeFormat(languageTag(), { dateStyle: "short", timeStyle: "short" }).format(new Date(value)) : "";
     },
 
     catalogImageUrl,
 
     totalStock,
+
+    whatsappUrl,
 
     coverImageUrl(images: ImageReference[] | null | undefined): string {
         const cover = [...(images ?? [])].sort((first, second) => (first.SortOrder ?? 0) - (second.SortOrder ?? 0))[0];
@@ -80,12 +96,16 @@ export default {
         return STATUS_STATES[status ?? ""] ?? ValueState.None;
     },
 
-    whatsappUrl(phone: string | null | undefined, message?: string): string {
-        const digits = (phone ?? "").replace(/\D/g, "");
-        const fullNumber = digits.length <= 11 ? `55${digits}` : digits;
-        const text = message ? `?text=${encodeURIComponent(message)}` : "";
+    storeWhatsappUrl(phone: string | null | undefined): string {
+        return phone ? whatsappUrl(phone) : "";
+    },
 
-        return `https://wa.me/${fullNumber}${text}`;
+    instagramUrl(user: string | null | undefined): string {
+        return user ? `https://instagram.com/${user.replace(/^@/, "")}` : "";
+    },
+
+    mailtoUrl(email: string | null | undefined): string {
+        return email ? `mailto:${email}` : "";
     }
 
 };

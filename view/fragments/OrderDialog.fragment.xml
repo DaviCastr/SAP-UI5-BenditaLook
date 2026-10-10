@@ -35,6 +35,22 @@
                     <Text text="{Notes}" />
                 </form:SimpleForm>
 
+                <form:SimpleForm
+                    editable="false"
+                    layout="ColumnLayout"
+                    title="{i18n>deliveryTitle}"
+                    visible="{= !!${path: 'DeliveryType', targetType: 'any'} }"
+                >
+                    <Label text="{i18n>deliveryType}" />
+                    <Text text="{path: 'DeliveryType', formatter: '.formatDeliveryType'}" />
+                    <Label text="{i18n>courierName}" />
+                    <Text text="{CourierName}" />
+                    <Label text="{i18n>vehiclePlate}" />
+                    <Text text="{VehiclePlate}" />
+                    <Label text="{i18n>deliveryNotes}" />
+                    <Text text="{DeliveryNotes}" />
+                </form:SimpleForm>
+
                 <Table items="{path: 'Items', templateShareable: false}" class="blTable sapUiSmallMarginTop">
                     <columns>
                         <Column>
@@ -73,15 +89,21 @@
                 press=".orders.onStartService"
             />
             <Button
-                text="{i18n>completeOrder}"
+                text="{i18n>outForDelivery}"
                 type="Emphasized"
                 visible="{= ${path: 'Status', targetType: 'any'} === 'IN_SERVICE' }"
+                press=".orders.onOpenDeliveryDialog"
+            />
+            <Button
+                text="{i18n>completeOrder}"
+                type="Emphasized"
+                visible="{= ${path: 'Status', targetType: 'any'} === 'IN_SERVICE' || ${path: 'Status', targetType: 'any'} === 'OUT_FOR_DELIVERY' }"
                 press=".orders.onComplete"
             />
             <Button
                 text="{i18n>cancelOrder}"
                 type="Reject"
-                visible="{= ${path: 'Status', targetType: 'any'} === 'NEW' || ${path: 'Status', targetType: 'any'} === 'IN_SERVICE' }"
+                visible="{= ${path: 'Status', targetType: 'any'} === 'NEW' || ${path: 'Status', targetType: 'any'} === 'IN_SERVICE' || ${path: 'Status', targetType: 'any'} === 'OUT_FOR_DELIVERY' }"
                 press=".orders.onCancel"
             />
             <Button text="{i18n>close}" press=".orders.onCloseDialog" />

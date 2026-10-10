@@ -6,7 +6,8 @@
 		"i18n": {
 			"bundleUrl": "i18n/i18n.properties",
 			"supportedLocales": [
-				""
+				"",
+				"en"
 			],
 			"fallbackLocale": ""
 		},
@@ -48,7 +49,8 @@
 				"settings": {
 					"bundleName": "apps.dflc.benditalook.i18n.i18n",
 					"supportedLocales": [
-						""
+						"",
+						"en"
 					],
 					"fallbackLocale": ""
 				}

@@ -8,7 +8,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "./BaseController", "../service/Or
   const OrderService = _interopRequireDefault(__OrderService);
   const formatter = _interopRequireDefault(__formatter);
   const OrderStatus = __formatter["OrderStatus"];
-  const STEPS = [OrderStatus.New, OrderStatus.InService, OrderStatus.Completed];
+  const STEPS = [OrderStatus.New, OrderStatus.InService, OrderStatus.OutForDelivery, OrderStatus.Completed];
 
   /**
    * @namespace apps.dflc.benditalook.controller
@@ -27,7 +27,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "./BaseController", "../service/Or
     onContactWhatsapp: function _onContactWhatsapp() {
       const orderNumber = this.trackingModel.getProperty("/order/Number");
       const message = this.getText("whatsappOrderMessage", [orderNumber]);
-      window.open(formatter.whatsappUrl(this.getStoreModel().getProperty("/whatsapp"), message), "_blank");
+      window.open(formatter.whatsappUrl(this.getStoreModel().getProperty("/Whatsapp"), message), "_blank");
     },
     onContinueShopping: function _onContinueShopping() {
       this.navTo("catalog");
@@ -44,15 +44,18 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "./BaseController", "../service/Or
           loaded: true,
           order,
           cancelled: order.Status === OrderStatus.Cancelled,
-          steps: this.buildSteps(order.Status)
+          hasDelivery: !!order.DeliveryType,
+          deliveryTypeText: this.formatDeliveryType(order.DeliveryType),
+          steps: this.buildSteps(order.Status, !!order.DeliveryType)
         });
       } catch (error) {
         this.handleError(error, "orderNotFound");
       }
     },
-    buildSteps: function _buildSteps(status) {
-      const currentIndex = STEPS.indexOf(status);
-      return STEPS.map((step, index) => ({
+    buildSteps: function _buildSteps(status, hasDelivery) {
+      const steps = STEPS.filter(step => step !== OrderStatus.OutForDelivery || hasDelivery || status !== OrderStatus.Completed);
+      const currentIndex = steps.indexOf(status);
+      return steps.map((step, index) => ({
         text: this.formatStatus(step),
         icon: index <= currentIndex ? "sap-icon://sys-enter-2" : "sap-icon://circle-task",
         done: index <= currentIndex

@@ -1,2 +1,2 @@
-sap.ui.define([],function(){"use strict";class t{constructor(t){this.adminModel=t}async changeStatus(t,e){const a=this.adminModel.bindContext("/ChangeOrderStatus(...)");a.setParameter("OrderId",t);a.setParameter("Status",e);await a.invoke()}}return t});
+sap.ui.define([],function(){"use strict";var e=function(e){e["UberFlash"]="UBER_FLASH";e["LocalCourier"]="LOCAL_COURIER";return e}(e||{});class t{constructor(e){this.adminModel=e}async changeStatus(e,t,r){const a=this.adminModel.bindContext("/ChangeOrderStatus(...)");a.setParameter("OrderId",e);a.setParameter("Status",t);if(r){a.setParameter("Delivery",r)}await a.invoke()}}t.DeliveryType=e;return t});
 //# sourceMappingURL=AdminOrderService.js.map

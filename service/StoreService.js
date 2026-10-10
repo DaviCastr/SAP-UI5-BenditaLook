@@ -1,0 +1,2 @@
+sap.ui.define([],function(){"use strict";class t{constructor(t){this.catalogModel=t}async storeInfo(){const t=this.catalogModel.bindContext("/StoreInfo(...)");await t.invoke();return t.getBoundContext().getObject()}}return t});
+//# sourceMappingURL=StoreService.js.map

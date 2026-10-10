@@ -36,7 +36,13 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/mod
       this.navTo("admin");
     },
     onContactWhatsapp: function _onContactWhatsapp() {
-      window.open(formatter.whatsappUrl(this.getStoreModel().getProperty("/whatsapp"), this.getText("whatsappGreeting")), "_blank");
+      window.open(formatter.whatsappUrl(this.getStoreModel().getProperty("/Whatsapp"), this.getText("whatsappGreeting")), "_blank");
+    },
+    onContactEmail: function _onContactEmail() {
+      window.open(formatter.mailtoUrl(this.getStoreModel().getProperty("/ContactEmail")), "_self");
+    },
+    onOpenInstagram: function _onOpenInstagram() {
+      window.open(formatter.instagramUrl(this.getStoreModel().getProperty("/Instagram")), "_blank");
     },
     applyFilters: function _applyFilters() {
       const {

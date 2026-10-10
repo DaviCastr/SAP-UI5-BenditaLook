@@ -123,6 +123,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "sap/ui/unified/ColorPickerPopover
       this.getView()?.bindElement({
         path: `/Products(ID=${productId},IsActiveEntity=false)`
       });
+      this.byId("categorySelect")?.getBinding("items")?.refresh();
     },
     refreshColorOptions: function _refreshColorOptions() {
       const colors = this.getListBinding("colorsTable").getAllCurrentContexts().map(context => context.getObject()).filter(color => color?.ID);

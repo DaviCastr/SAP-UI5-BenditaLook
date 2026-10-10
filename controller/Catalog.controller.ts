@@ -48,7 +48,15 @@ export default class Catalog extends BaseController {
     }
 
     public onContactWhatsapp(): void {
-        window.open(formatter.whatsappUrl(this.getStoreModel().getProperty("/whatsapp") as string, this.getText("whatsappGreeting")), "_blank");
+        window.open(formatter.whatsappUrl(this.getStoreModel().getProperty("/Whatsapp") as string, this.getText("whatsappGreeting")), "_blank");
+    }
+
+    public onContactEmail(): void {
+        window.open(formatter.mailtoUrl(this.getStoreModel().getProperty("/ContactEmail") as string), "_self");
+    }
+
+    public onOpenInstagram(): void {
+        window.open(formatter.instagramUrl(this.getStoreModel().getProperty("/Instagram") as string), "_blank");
     }
 
     private applyFilters(): void {

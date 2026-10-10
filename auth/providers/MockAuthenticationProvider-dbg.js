@@ -8,7 +8,7 @@ sap.ui.define(["../AuthenticationService"], function (___AuthenticationService) 
       return Promise.resolve({
         accessToken: "",
         expiresAt: Date.now() + MockAuthenticationProvider.SESSION_DURATION_MS,
-        userName: "Admin"
+        userName: ""
       });
     }
     logout() {

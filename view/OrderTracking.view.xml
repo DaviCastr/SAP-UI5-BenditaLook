@@ -41,6 +41,17 @@
                     </VBox>
                 </HBox>
 
+                <VBox visible="{tracking>/hasDelivery}" class="blDeliveryCard sapUiSmallMarginBottom">
+                    <Title text="{i18n>deliveryTitle}" level="H3" class="sapUiTinyMarginBottom" />
+                    <Text text="{parts: ['i18n>deliveryTypeLine', 'tracking>/deliveryTypeText'], formatter: '.formatter.message'}" />
+                    <Text text="{parts: ['i18n>courierLine', 'tracking>/order/CourierName'], formatter: '.formatter.message'}" />
+                    <Text
+                        text="{parts: ['i18n>vehiclePlateLine', 'tracking>/order/VehiclePlate'], formatter: '.formatter.message'}"
+                        visible="{= !!${tracking>/order/VehiclePlate} }"
+                    />
+                    <Text text="{tracking>/order/DeliveryNotes}" visible="{= !!${tracking>/order/DeliveryNotes} }" class="blMuted" />
+                </VBox>
+
                 <Text text="{i18n>trackingInfo}" class="sapUiSmallMarginBottom" />
 
                 <Table items="{tracking>/order/Items}" class="blTable">
@@ -82,7 +93,7 @@
                         icon="sap-icon://discussion"
                         type="Success"
                         press=".onContactWhatsapp"
-                        visible="{= !!${store>/whatsapp} }"
+                        visible="{= !!${store>/Whatsapp} }"
                     />
                 </HBox>
             </VBox>

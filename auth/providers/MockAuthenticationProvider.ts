@@ -10,7 +10,7 @@ export class MockAuthenticationProvider implements IAuthenticationProvider {
         return Promise.resolve({
             accessToken: "",
             expiresAt: Date.now() + MockAuthenticationProvider.SESSION_DURATION_MS,
-            userName: "Admin"
+            userName: ""
         });
     }
 

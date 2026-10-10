@@ -31,6 +31,10 @@ export interface TrackedOrder {
     Status: string;
     CustomerName: string;
     TotalAmount: number;
+    DeliveryType?: string;
+    CourierName?: string;
+    VehiclePlate?: string;
+    DeliveryNotes?: string;
     createdAt: string;
     modifiedAt: string;
     Items: TrackedOrderItem[];

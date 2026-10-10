@@ -41,6 +41,12 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/core/UIComponent", "sap/ui/
     formatStatus: function _formatStatus(status) {
       return status ? this.getText(`orderStatus.${status}`) : "";
     },
+    formatDeliveryType: function _formatDeliveryType(deliveryType) {
+      return deliveryType ? this.getText(`deliveryType.${deliveryType}`) : "";
+    },
+    refreshStoreInfo: function _refreshStoreInfo() {
+      return this.getAppComponent().refreshStoreInfo();
+    },
     getText: function _getText(key, parameters) {
       const bundle = this.getAppComponent().getModel("i18n").getResourceBundle();
       return bundle.getText(key, parameters) ?? key;

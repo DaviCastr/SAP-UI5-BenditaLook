@@ -1,4 +1,4 @@
-sap.ui.define(["sap/ui/core/UIComponent", "sap/ui/model/odata/v4/ODataModel", "sap/ui/model/json/JSONModel", "sap/m/MessageBox", "./model/models", "./model/CartModel", "./auth/AuthenticationService", "./auth/providers/AuthenticatedProviderFactory", "./auth/providers/XsuaaAuthHelper", "./auth/storage/SessionStorage", "./util/Environment", "./util/http", "./util/feedback"], function (BaseComponent, ODataModel, JSONModel, MessageBox, ___model_models, __CartModel, ___auth_AuthenticationService, ___auth_providers_AuthenticatedProviderFactory, ___auth_providers_XsuaaAuthHelper, ___auth_storage_SessionStorage, __Environment, ___util_http, ___util_feedback) {
+sap.ui.define(["sap/ui/core/UIComponent", "sap/ui/model/odata/v4/ODataModel", "sap/ui/model/json/JSONModel", "sap/m/MessageBox", "./model/models", "./model/CartModel", "./auth/AuthenticationService", "./auth/providers/AuthenticatedProviderFactory", "./auth/providers/XsuaaAuthHelper", "./auth/storage/SessionStorage", "./util/Environment", "./util/http", "./util/feedback", "./service/StoreService"], function (BaseComponent, ODataModel, JSONModel, MessageBox, ___model_models, __CartModel, ___auth_AuthenticationService, ___auth_providers_AuthenticatedProviderFactory, ___auth_providers_XsuaaAuthHelper, ___auth_storage_SessionStorage, __Environment, ___util_http, ___util_feedback, __StoreService) {
   "use strict";
 
   function _interopRequireDefault(obj) {
@@ -14,6 +14,7 @@ sap.ui.define(["sap/ui/core/UIComponent", "sap/ui/model/odata/v4/ODataModel", "s
   const isBackendUnavailableError = ___util_http["isBackendUnavailableError"];
   const isSessionExpiredError = ___util_http["isSessionExpiredError"];
   const getBackendErrorMessage = ___util_feedback["getBackendErrorMessage"];
+  const StoreService = _interopRequireDefault(__StoreService);
   const ADMIN_ROUTE = "admin";
   const LOGIN_ROUTE = "login";
 
@@ -42,10 +43,9 @@ sap.ui.define(["sap/ui/core/UIComponent", "sap/ui/model/odata/v4/ODataModel", "s
       this.registerGlobalErrorHandlers();
       this.setModel(createDeviceModel(), "device");
       this.setModel(new CartModel(), "cart");
-      this.setModel(new JSONModel({
-        whatsapp: XsuaaAuthHelper.getConfig().storeWhatsapp
-      }), "store");
+      this.setModel(new JSONModel({}), "store");
       this.setModel(this.createODataModel(XsuaaAuthHelper.getConfig().catalogService), "catalog");
+      void this.refreshStoreInfo();
       this.getRouter().initialize();
       await this.completeLoginRedirect();
     },
@@ -62,6 +62,14 @@ sap.ui.define(["sap/ui/core/UIComponent", "sap/ui/model/odata/v4/ODataModel", "s
       this.setModel(model);
       current?.destroy();
       return model;
+    },
+    refreshStoreInfo: async function _refreshStoreInfo() {
+      try {
+        const storeInfo = await new StoreService(this.getModel("catalog")).storeInfo();
+        this.getModel("store").setData(storeInfo);
+      } catch (error) {
+        console.error(error);
+      }
     },
     handleUnexpectedError: function _handleUnexpectedError(reason) {
       if (!reason || isSessionExpiredError(reason) || isBackendUnavailableError(reason) || this.unexpectedErrorShown) {

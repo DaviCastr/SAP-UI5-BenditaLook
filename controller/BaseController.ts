@@ -54,6 +54,14 @@ export default abstract class BaseController extends Controller {
         return status ? this.getText(`orderStatus.${status}`) : "";
     }
 
+    public formatDeliveryType(deliveryType: string | null | undefined): string {
+        return deliveryType ? this.getText(`deliveryType.${deliveryType}`) : "";
+    }
+
+    public refreshStoreInfo(): Promise<void> {
+        return this.getAppComponent().refreshStoreInfo();
+    }
+
     public getText(key: string, parameters?: unknown[]): string {
         const bundle = (this.getAppComponent().getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle;
         return bundle.getText(key, parameters) ?? key;
